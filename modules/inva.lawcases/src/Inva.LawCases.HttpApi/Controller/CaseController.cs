@@ -13,7 +13,7 @@ namespace Inva.LawCases.Controller
 {
   
     [Route("api/law-cases/case")]
-    public class CaseController : AbpController, ICaseAppService
+    public class CaseController : LawCasesController, ICaseAppService
     {
         public readonly ICaseAppService _caseAppService;
 
@@ -21,25 +21,39 @@ namespace Inva.LawCases.Controller
         {
             _caseAppService = caseAppService;
         }
+
+        [HttpGet("all")]
+        public async Task<IEnumerable<CaseDto>> GetAllCaseAsync()
+        {
+           return await _caseAppService.GetAllCaseAsync();
+        }
+
+        [HttpGet("{caseGuid}")]
+        public async Task<CaseDto> GetCaseByIdAsync(Guid caseGuid)
+        {
+            return await _caseAppService.GetCaseByIdAsync(caseGuid);
+        }
+
         [HttpPost]
         public async Task<CaseDto> CreateCaseAsync(CreateUpdateCaseDto caseDto)
         {
            return await _caseAppService.CreateCaseAsync(caseDto);
         }
-        [HttpDelete]
+
+        [HttpPut("{id}")]
+        public async Task<CaseDto> UpdateCaseAsync(Guid id, CreateUpdateCaseDto caseDto)
+        {
+            return await _caseAppService.UpdateCaseAsync(id, caseDto);
+        }
+
+        [HttpDelete("{caseGuid}")]
         public async Task<bool> DeleteCaseAsync(Guid caseGuid)
         {
             return await _caseAppService.DeleteCaseAsync(caseGuid);
         }
-        [HttpGet]
-        public async Task<CaseDto> GetCaseByIdAsync(Guid caseGuid)
-        {
-            return await _caseAppService.GetCaseByIdAsync(caseGuid);
-        }
-        [HttpPut]
-        public async Task<CaseDto> UpdateCaseAsync(CreateUpdateCaseDto caseDto)
-        {
-            return await _caseAppService.UpdateCaseAsync(caseDto);
-        }
+
+       
+
+        
     }
 }

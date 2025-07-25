@@ -9,8 +9,9 @@ using Volo.Abp.Application.Dtos;
 
 namespace Inva.LawCases.DTOs.Case
 {
-    public class CaseDto:FullAuditedEntityDto<Guid>
+    public class CaseDto
     {
+        public Guid Id { get; set; }
         public int Number { get; set; }
         public int Year { get; set; }
         public string LitigationDegree { get; set; }

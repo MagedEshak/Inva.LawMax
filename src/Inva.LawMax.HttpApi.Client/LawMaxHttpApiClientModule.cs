@@ -7,6 +7,7 @@ using Volo.Abp.VirtualFileSystem;
 using Volo.Abp.FeatureManagement;
 using Volo.Abp.Identity;
 using Volo.Abp.TenantManagement;
+using Inva.LawCases;
 
 namespace Inva.LawMax;
 
@@ -18,6 +19,7 @@ namespace Inva.LawMax;
     typeof(AbpIdentityHttpApiClientModule),
     typeof(AbpTenantManagementHttpApiClientModule),
     typeof(AbpSettingManagementHttpApiClientModule)
+    //typeof(LawCasesHttpApiClientModule)
 )]
 public class LawMaxHttpApiClientModule : AbpModule
 {

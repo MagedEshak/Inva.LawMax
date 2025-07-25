@@ -9,7 +9,7 @@ using Volo.Abp.Application.Dtos;
 
 namespace Inva.LawCases.DTOs.Case
 {
-    public class CreateUpdateCaseDto : FullAuditedEntityDto<Guid>
+    public class CreateUpdateCaseDto
     {
         public int Number { get; set; }
         public int Year { get; set; }

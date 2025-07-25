@@ -19,13 +19,10 @@ namespace Inva.LawMax;
     typeof(AbpAccountHttpApiModule),
     typeof(AbpIdentityHttpApiModule),
     typeof(AbpTenantManagementHttpApiModule),
-    typeof(AbpFeatureManagementHttpApiModule)
-
+    typeof(AbpFeatureManagementHttpApiModule),
+     typeof(LawCasesHttpApiModule)
     )]
 
-[DependsOn(
-    typeof(LawCasesHttpApiModule)
-)]
 public class LawMaxHttpApiModule : AbpModule
 {
     public override void ConfigureServices(ServiceConfigurationContext context)

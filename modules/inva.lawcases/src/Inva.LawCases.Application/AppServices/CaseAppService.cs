@@ -22,27 +22,10 @@ namespace Inva.LawCases.AppServices
         {
             _caseRepo = caseRepo;
         }
-        public async Task<CaseDto> CreateCaseAsync(CreateUpdateCaseDto caseDto)
+        public async Task<IEnumerable<CaseDto>> GetAllCaseAsync()
         {
-            var caseEntity = ObjectMapper.Map<CreateUpdateCaseDto, Case>(caseDto);
-
-            var insertedCase = await _caseRepo.InsertAsync(caseEntity, autoSave: true);
-
-            return ObjectMapper.Map<Case, CaseDto>(insertedCase);
-        }
-
-        public async Task<bool> DeleteCaseAsync(Guid caseGuid)
-        {
-            var caseEntityId = await _caseRepo.GetAsync(caseGuid);
-
-            if (caseEntityId == null)
-            {
-                return false;
-            }
-
-            await _caseRepo.DeleteAsync(caseGuid);
-
-            return true;
+            var cases = await _caseRepo.GetListAsync(); // Assuming _caseRepository is injected
+            return ObjectMapper.Map<List<Case>, List<CaseDto>>(cases);
         }
 
         public async Task<CaseDto> GetCaseByIdAsync(Guid caseGuid)
@@ -59,9 +42,19 @@ namespace Inva.LawCases.AppServices
             return ObjectMapper.Map<Case, CaseDto>(entity);
         }
 
-        public async Task<CaseDto> UpdateCaseAsync(CreateUpdateCaseDto caseDto)
+
+        public async Task<CaseDto> CreateCaseAsync(CreateUpdateCaseDto caseDto)
         {
-            var caseEntityId = await _caseRepo.GetAsync(caseDto.Id);
+            var caseEntity = ObjectMapper.Map<CreateUpdateCaseDto, Case>(caseDto);
+
+            var insertedCase = await _caseRepo.InsertAsync(caseEntity, autoSave: true);
+
+            return ObjectMapper.Map<Case, CaseDto>(insertedCase);
+        }
+
+        public async Task<CaseDto> UpdateCaseAsync(Guid id,CreateUpdateCaseDto caseDto)
+        {
+            var caseEntityId = await _caseRepo.GetAsync(id);
 
             if (caseEntityId == null)
             {
@@ -74,5 +67,21 @@ namespace Inva.LawCases.AppServices
 
             return ObjectMapper.Map<Case, CaseDto>(caseEntityId);
         }
+
+        public async Task<bool> DeleteCaseAsync(Guid caseGuid)
+        {
+            var caseEntityId = await _caseRepo.GetAsync(caseGuid);
+
+            if (caseEntityId == null)
+            {
+                return false;
+            }
+
+            await _caseRepo.DeleteAsync(caseGuid);
+
+            return true;
+        }
+
+       
     }
 }

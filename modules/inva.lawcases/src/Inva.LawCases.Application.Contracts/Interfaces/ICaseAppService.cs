@@ -11,7 +11,8 @@ namespace Inva.LawCases.Interfaces
     public interface ICaseAppService
     {
         Task<CaseDto> CreateCaseAsync(CreateUpdateCaseDto caseDto);
-        Task<CaseDto> UpdateCaseAsync(CreateUpdateCaseDto caseDto);
+        Task<CaseDto> UpdateCaseAsync(Guid id,CreateUpdateCaseDto caseDto);
+        Task<IEnumerable<CaseDto>> GetAllCaseAsync();
         Task<CaseDto> GetCaseByIdAsync(Guid caseGuid);
         Task<bool> DeleteCaseAsync(Guid caseGuid);
     }

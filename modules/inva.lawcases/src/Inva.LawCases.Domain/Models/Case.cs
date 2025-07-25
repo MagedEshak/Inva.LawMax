@@ -8,9 +8,9 @@ using Volo.Abp.MultiTenancy;
 
 namespace Inva.LawCases.Models
 {
-    public class Case :FullAuditedEntity<Guid>, IMultiTenant
+    public class Case : AuditedAggregateRoot<Guid>, IMultiTenant
     {
-    
+
         public int Number { get; set; }
         public int Year { get; set; }
         public string LitigationDegree { get; set; }

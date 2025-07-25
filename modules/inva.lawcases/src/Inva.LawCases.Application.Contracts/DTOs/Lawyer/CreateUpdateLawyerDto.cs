@@ -16,6 +16,6 @@ namespace Inva.LawMax.DTOs.Lawyer
         public string Mobile { get; set; }
         public string Address { get; set; }
          
-        //public Guid? CaseId { get; set; }
+        public Guid? CaseId { get; set; }
     }
 }

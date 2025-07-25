@@ -14,6 +14,7 @@ using Volo.Abp.SettingManagement.EntityFrameworkCore;
 using Volo.Abp.BlobStoring.Database.EntityFrameworkCore;
 using Volo.Abp.TenantManagement.EntityFrameworkCore;
 using Volo.Abp.Studio;
+using Inva.LawCases;
 
 namespace Inva.LawMax.EntityFrameworkCore;
 
@@ -28,7 +29,8 @@ namespace Inva.LawMax.EntityFrameworkCore;
     typeof(AbpIdentityEntityFrameworkCoreModule),
     typeof(AbpOpenIddictEntityFrameworkCoreModule),
     typeof(AbpTenantManagementEntityFrameworkCoreModule),
-    typeof(BlobStoringDatabaseEntityFrameworkCoreModule)
+    typeof(BlobStoringDatabaseEntityFrameworkCoreModule),
+    typeof(LawCasesHttpApiClientModule)
     )]
 public class LawMaxEntityFrameworkCoreModule : AbpModule
 {

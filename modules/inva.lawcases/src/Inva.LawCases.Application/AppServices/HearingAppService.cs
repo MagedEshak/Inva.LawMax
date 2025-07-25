@@ -1,4 +1,5 @@
 ﻿using Inva.LawCases.Base;
+using Inva.LawCases.DTOs.Case;
 using Inva.LawCases.DTOs.Hearing;
 using Inva.LawCases.Interfaces;
 using Inva.LawCases.Models;
@@ -22,26 +23,11 @@ namespace Inva.LawCases.AppServices
         {
             _hearingRepo = hearingRepo;
         }
-        public async Task<HearingDto> CreateHearingAsync(CreateUpdateHearingDto hearing)
+
+        public async Task<IEnumerable<HearingDto>> GetAllHearingAsync()
         {
-            var hearingEntity = ObjectMapper.Map<CreateUpdateHearingDto, Hearing>(hearing);
-
-            var insertedHearing = await _hearingRepo.InsertAsync(hearingEntity, autoSave: true);
-
-            return ObjectMapper.Map<Hearing, HearingDto>(insertedHearing);
-        }
-
-        public async Task<bool> DeleteHearingAsync(Guid hearing)
-        {
-            var hearingEntity = await _hearingRepo.GetAsync(hearing);
-
-            if (hearingEntity == null)
-            {
-                return false;
-            }
-
-            await _hearingRepo.DeleteAsync(hearing);
-            return true;
+            var hearings = await _hearingRepo.GetListAsync(); 
+            return ObjectMapper.Map<List<Hearing>, List<HearingDto>>(hearings);
         }
 
         public async Task<HearingDto> GetHearingByIdAsync(Guid hearing)
@@ -58,9 +44,18 @@ namespace Inva.LawCases.AppServices
             return ObjectMapper.Map<Hearing, HearingDto>(entity);
         }
 
-        public async Task<HearingDto> UpdateHearingAsync(CreateUpdateHearingDto hearing)
+        public async Task<HearingDto> CreateHearingAsync(CreateUpdateHearingDto hearing)
         {
-            var hearingEntity = await _hearingRepo.GetAsync(hearing.Id);
+            var hearingEntity = ObjectMapper.Map<CreateUpdateHearingDto, Hearing>(hearing);
+
+            var insertedHearing = await _hearingRepo.InsertAsync(hearingEntity, autoSave: true);
+
+            return ObjectMapper.Map<Hearing, HearingDto>(insertedHearing);
+        }
+
+        public async Task<HearingDto> UpdateHearingAsync(Guid id, CreateUpdateHearingDto hearing)
+        {
+            var hearingEntity = await _hearingRepo.GetAsync(id);
 
             if (hearingEntity == null)
             {
@@ -71,6 +66,19 @@ namespace Inva.LawCases.AppServices
             await _hearingRepo.UpdateAsync(hearingEntity, autoSave: true);
 
             return ObjectMapper.Map<Hearing, HearingDto>(hearingEntity);
+        }
+
+        public async Task<bool> DeleteHearingAsync(Guid hearing)
+        {
+            var hearingEntity = await _hearingRepo.GetAsync(hearing);
+
+            if (hearingEntity == null)
+            {
+                return false;
+            }
+
+            await _hearingRepo.DeleteAsync(hearing);
+            return true;
         }
     }
 }

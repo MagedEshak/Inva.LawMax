@@ -10,6 +10,7 @@ using Volo.Abp.MultiTenancy;
 namespace Inva.LawCases.Models
 {
     public class Lawyer : AuditedAggregateRoot<Guid>, IMultiTenant
+
     {
         public string Name { get; set; }
         public string Position { get; set; }
@@ -19,6 +20,6 @@ namespace Inva.LawCases.Models
         public Guid? CaseId { get; set; }
         public virtual Case Case { get; set; }
 
-        public Guid? TenantId {  get; set; }
+        public Guid? TenantId { get; set; }
     }
 }

@@ -8,7 +8,7 @@ using Volo.Abp.MultiTenancy;
 
 namespace Inva.LawCases.Models
 {
-    public class Hearing : FullAuditedEntity<Guid>,IMultiTenant
+    public class Hearing : AuditedAggregateRoot<Guid>, IMultiTenant
     {
         public DateTime Date { get; set; } = DateTime.Now;
         public string Decision { get; set; }

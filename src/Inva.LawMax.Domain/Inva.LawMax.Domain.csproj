@@ -9,6 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\modules\inva.lawcases\src\Inva.LawCases.Domain\Inva.LawCases.Domain.csproj" />
     <ProjectReference Include="..\Inva.LawMax.Domain.Shared\Inva.LawMax.Domain.Shared.csproj" />
   </ItemGroup>
 

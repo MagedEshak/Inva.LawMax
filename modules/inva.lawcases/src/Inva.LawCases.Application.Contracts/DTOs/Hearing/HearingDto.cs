@@ -7,8 +7,9 @@ using Volo.Abp.Application.Dtos;
 
 namespace Inva.LawCases.DTOs.Hearing
 {
-    public class HearingDto :FullAuditedEntityDto<Guid>
+    public class HearingDto
     {
+        public Guid Id { get; set; }
         public DateTime Date { get; set; } = DateTime.Now;
         public string Decision { get; set; }
 
