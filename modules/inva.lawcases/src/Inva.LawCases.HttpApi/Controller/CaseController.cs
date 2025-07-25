@@ -13,7 +13,7 @@ namespace Inva.LawCases.Controller
 {
   
     [Route("api/law-cases/case")]
-    public class CaseController : AbpController, ICaseAppService
+    public class CaseController : LawCasesController, ICaseAppService
     {
         public readonly ICaseAppService _caseAppService;
 

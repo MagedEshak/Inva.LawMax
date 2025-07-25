@@ -14,7 +14,9 @@ namespace Inva.LawCases.Mapping
         public HearingMapping()
         {
             CreateMap<Hearing, HearingDto>();
-            CreateMap<CreateUpdateHearingDto, Hearing>();
+            CreateMap<CreateUpdateHearingDto, Hearing>()
+                .ForMember(dest => dest.Case, opt => opt.Ignore())
+               .ForMember(dest => dest.TenantId, opt => opt.Ignore());
         }
     }
 }

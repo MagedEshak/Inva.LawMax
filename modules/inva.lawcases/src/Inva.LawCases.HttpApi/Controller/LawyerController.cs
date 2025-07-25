@@ -9,13 +9,14 @@ using System.Text;
 using System.Threading.Tasks;
 using Volo.Abp;
 using Volo.Abp.Application.Dtos;
+using Volo.Abp.Application.Services;
 using Volo.Abp.AspNetCore.Mvc;
 using Volo.Abp.Domain.Repositories;
 
 namespace Inva.LawCases.Controller
 {
     [Route("api/law-cases/lawyer")]
-    public class LawyerController : AbpController
+    public class LawyerController : LawCasesController , ILawyerAppService
     {
         public readonly ILawyerAppService _lawyerAppService;
 
@@ -53,6 +54,26 @@ namespace Inva.LawCases.Controller
         public async Task<LawyerDto> UpdateLawyerAsync(Guid id, CreateUpdateLawyerDto lawyerDto)
         {
             return await _lawyerAppService.UpdateAsync(id,lawyerDto);
+        }
+
+        Task<LawyerDto> IReadOnlyAppService<LawyerDto, LawyerDto, Guid, PagedAndSortedResultRequestDto>.GetAsync(Guid id)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<LawyerDto> ICreateAppService<LawyerDto, CreateUpdateLawyerDto>.CreateAsync(CreateUpdateLawyerDto input)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<LawyerDto> IUpdateAppService<LawyerDto, Guid, CreateUpdateLawyerDto>.UpdateAsync(Guid id, CreateUpdateLawyerDto input)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task IDeleteAppService<Guid>.DeleteAsync(Guid id)
+        {
+            throw new NotImplementedException();
         }
     }
 }

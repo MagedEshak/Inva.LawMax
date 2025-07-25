@@ -13,8 +13,10 @@ namespace Inva.LawCases.Mapping
     {
         public CaseMapping()
         {
-            CreateMap<Case,CaseDto>();
-            CreateMap<CreateUpdateCaseDto,Case>();
+            CreateMap<Case, CaseDto>();
+            CreateMap<CreateUpdateCaseDto, Case>()
+               .ForMember(dest => dest.Lawyers, opt => opt.Ignore())
+               .ForMember(dest => dest.TenantId, opt => opt.Ignore());
         }
     }
 }

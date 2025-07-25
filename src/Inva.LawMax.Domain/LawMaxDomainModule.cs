@@ -17,6 +17,7 @@ using Volo.Abp.Emailing;
 using Volo.Abp.FeatureManagement;
 using Volo.Abp.Identity;
 using Volo.Abp.TenantManagement;
+using Inva.LawCases;
 
 namespace Inva.LawMax;
 
@@ -33,7 +34,8 @@ namespace Inva.LawMax;
     typeof(AbpIdentityDomainModule),
     typeof(AbpOpenIddictDomainModule),
     typeof(AbpTenantManagementDomainModule),
-    typeof(BlobStoringDatabaseDomainModule)
+    typeof(BlobStoringDatabaseDomainModule),
+    typeof(LawCasesDomainModule)
     )]
 public class LawMaxDomainModule : AbpModule
 {

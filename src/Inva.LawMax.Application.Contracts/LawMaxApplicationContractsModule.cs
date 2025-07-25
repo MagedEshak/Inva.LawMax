@@ -5,6 +5,7 @@ using Volo.Abp.SettingManagement;
 using Volo.Abp.FeatureManagement;
 using Volo.Abp.Identity;
 using Volo.Abp.TenantManagement;
+using Inva.LawCases;
 
 namespace Inva.LawMax;
 
@@ -15,7 +16,8 @@ namespace Inva.LawMax;
     typeof(AbpIdentityApplicationContractsModule),
     typeof(AbpAccountApplicationContractsModule),
     typeof(AbpTenantManagementApplicationContractsModule),
-    typeof(AbpPermissionManagementApplicationContractsModule)
+    typeof(AbpPermissionManagementApplicationContractsModule),
+    typeof(LawCasesApplicationContractsModule)
 )]
 public class LawMaxApplicationContractsModule : AbpModule
 {

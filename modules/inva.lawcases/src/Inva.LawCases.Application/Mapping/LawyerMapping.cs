@@ -13,7 +13,9 @@ namespace Inva.LawCases.Mapping
     {
         public LawyerMapping() {
             CreateMap<Lawyer, LawyerDto>();
-            CreateMap<CreateUpdateLawyerDto, Lawyer>();
+            //CreateMap<CreateUpdateLawyerDto, Lawyer>()
+            //    .ForMember(dest => dest.Case, opt => opt.Ignore())
+            //    .ForMember(dest => dest.TenantId, opt => opt.Ignore());
         }
     }
 }

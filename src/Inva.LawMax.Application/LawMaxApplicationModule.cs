@@ -6,6 +6,7 @@ using Volo.Abp.AutoMapper;
 using Volo.Abp.FeatureManagement;
 using Volo.Abp.Modularity;
 using Volo.Abp.TenantManagement;
+using Inva.LawCases;
 
 namespace Inva.LawMax;
 
@@ -17,7 +18,8 @@ namespace Inva.LawMax;
     typeof(AbpIdentityApplicationModule),
     typeof(AbpAccountApplicationModule),
     typeof(AbpTenantManagementApplicationModule),
-    typeof(AbpSettingManagementApplicationModule)
+    typeof(AbpSettingManagementApplicationModule),
+    typeof(LawCasesApplicationModule)
     )]
 public class LawMaxApplicationModule : AbpModule
 {
