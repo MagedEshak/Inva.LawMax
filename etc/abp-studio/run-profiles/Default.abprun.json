@@ -1,0 +1,28 @@
+﻿{
+  "applications": {
+    "Inva.LawMax.HttpApi.Host": {
+      "type": "dotnet-project",
+      "launchUrl": "https://localhost:44330",
+      "path": "../../../src/Inva.LawMax.HttpApi.Host/Inva.LawMax.HttpApi.Host.csproj",
+      "kubernetesService": ".*-httpapihost$",
+      "healthCheckEndpoint": "/health-status",
+      "healthUiEndpoint": "/health-ui",
+      "execution": {
+        "order": 4
+      }
+    },
+    "Inva.LawMax.Angular": {
+      "type": "cli",
+      "workingDirectory": "../../../angular",
+      "startCommand": "./start.ps1",
+      "launchUrl": "http://localhost:4200",
+      "kubernetesService": ".*-angular$",
+      "execution": {
+        "order": 2
+      }    
+    }
+  },
+  "containers": {
+    "serviceName": "LawMax-Containers",
+  }
+}

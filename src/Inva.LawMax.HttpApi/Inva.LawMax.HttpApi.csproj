@@ -1,0 +1,29 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <Import Project="..\..\common.props" />
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <RootNamespace>Inva.LawMax</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\modules\inva.lawcases\src\Inva.LawCases.Application\Inva.LawCases.Application.csproj" />
+    <ProjectReference Include="..\..\modules\inva.lawcases\src\Inva.LawCases.HttpApi\Inva.LawCases.HttpApi.csproj" />
+    <ProjectReference Include="..\Inva.LawMax.Application.Contracts\Inva.LawMax.Application.Contracts.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Volo.Abp.PermissionManagement.HttpApi" Version="9.2.2" />
+    <PackageReference Include="Volo.Abp.FeatureManagement.HttpApi" Version="9.2.2" />
+    <PackageReference Include="Volo.Abp.SettingManagement.HttpApi" Version="9.2.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Volo.Abp.Identity.HttpApi" Version="9.2.2" />
+    <PackageReference Include="Volo.Abp.Account.HttpApi" Version="9.2.2" />
+    <PackageReference Include="Volo.Abp.TenantManagement.HttpApi" Version="9.2.2" />
+  </ItemGroup>
+
+</Project>

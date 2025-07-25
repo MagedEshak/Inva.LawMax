@@ -1,0 +1,66 @@
+{
+  "id": "aa7bc809-5a88-4e3c-8cd0-2503926a0eaf",
+  "template": "app",
+  "versions": {
+    "AbpFramework": "9.2.2",
+    "AbpStudio": "1.1.1",
+    "TargetDotnetFramework": "net9.0"
+  },
+  "modules": {
+    "Inva.LawMax": {
+      "path": "Inva.LawMax.abpmdl",
+      "folder": "main"
+    },
+    "Inva.LawCases": {
+      "path": "modules/inva.lawcases/Inva.LawCases.abpmdl",
+      "folder": "modules"
+    }
+  },
+  "runProfiles": {
+    "Default": {
+      "path": "etc/abp-studio/run-profiles/Default.abprun.json"
+    }
+  },
+  "options": {
+    "httpRequests": {
+      "ignoredUrls": []
+    }
+  },
+  "creatingStudioConfiguration": {
+    "template": "app",
+    "createdAbpStudioVersion": "1.1.1",
+    "tiered": "false",
+    "runInstallLibs": "true",
+    "useLocalReferences": "false",
+    "multiTenancy": "true",
+    "includeTests": "true",
+    "kubernetesConfiguration": "false",
+    "uiFramework": "angular",
+    "mobileFramework": "none",
+    "distributedEventBus": "none",
+    "databaseProvider": "ef",
+    "runDbMigrator": "false",
+    "databaseManagementSystem": "sqlserver",
+    "separateTenantSchema": "false",
+    "createInitialMigration": "true",
+    "theme": "leptonx-lite",
+    "themeStyle": "",
+    "themeMenuPlacement": "",
+    "progressiveWebApp": "false",
+    "runProgressiveWebAppSupport": "false",
+    "publicWebsite": "false",
+    "socialLogin": "false",
+    "selectedLanguages": [
+      "English",
+      "العربية"
+    ],
+    "defaultLanguage": "English",
+    "createCommand": "abp new Inva.LawMax -t app --ui-framework angular --database-provider ef --database-management-system sqlserver --theme leptonx-lite --skip-migrator  --without-cms-kit --sample-crud-page --dont-run-bundling --no-social-logins -no-gdpr -no-openiddict-admin-ui -no-audit-logging -no-file-management -no-language-management -no-text-template-management"
+  },
+  "folders": {
+    "items": {
+      "main": {},
+      "modules": {}
+    }
+  }
+}

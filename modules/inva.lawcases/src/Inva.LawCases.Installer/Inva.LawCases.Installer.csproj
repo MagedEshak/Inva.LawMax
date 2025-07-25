@@ -1,0 +1,29 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <Import Project="..\..\common.props"/>
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
+    <RootNamespace>Inva.LawCases</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Volo.Abp.VirtualFileSystem" Version="9.2.2"/>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="..\..\Inva.LawCases.abpmdl"/>
+    <Content Include="..\..\Inva.LawCases.abpmdl">
+      <Pack>true</Pack>
+      <PackagePath>content\</PackagePath>
+    </Content>
+    <None Remove="..\..\**\*.abppkg*" />
+    <Content Include="..\..\**\*.abppkg*">
+      <Pack>true</Pack>
+      <PackagePath>content\</PackagePath>
+    </Content>
+  </ItemGroup>
+
+</Project>
