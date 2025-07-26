@@ -29,8 +29,6 @@ namespace Inva.LawCases.AppServices
             _lawyerRepo = lawyerRepo;
         }
 
-
-
         public async Task<LawyerDto> CreateLawyerAsync(CreateUpdateLawyerDto lawyerDto)
         {
             try
@@ -47,7 +45,6 @@ namespace Inva.LawCases.AppServices
                 throw;
             }
         }
-
 
         public async Task<bool> DeleteLawyerAsync(Guid lawyerGuid)
         {
@@ -100,30 +97,33 @@ namespace Inva.LawCases.AppServices
             return ObjectMapper.Map<Lawyer, LawyerDto>(entity);
         }
 
-        public Task<PagedResultDto<LawyerDto>> GetListAsync(PagedAndSortedResultRequestDto input)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<LawyerDto> UpdateAsync(Guid id, CreateUpdateLawyerDto input)
-        {
-            throw new NotImplementedException();
-        }
 
         public async Task<LawyerDto> UpdateLawyerAsync(Guid id, CreateUpdateLawyerDto lawyerDto)
         {
-            var lawyerEntityId = await _lawyerRepo.GetAsync(id);
+            var lawyer = await _lawyerRepo.GetAsync(id);
 
-            if (lawyerEntityId == null)
+            if (lawyer == null)
             {
                 throw new EntityNotFoundException("This Lawyer Not Found");
             }
 
-            ObjectMapper.Map(lawyerDto, lawyerEntityId);
 
-            await _lawyerRepo.UpdateAsync(lawyerEntityId, autoSave: true);
+            if (lawyerDto.Name != null)
+                lawyer.Name = lawyerDto.Name;
 
-            return ObjectMapper.Map<Lawyer, LawyerDto>(lawyerEntityId);
+            if (lawyerDto.Email != null)
+                lawyer.Email = lawyerDto.Email;
+
+            if (lawyerDto.Phone != null)
+                lawyer.Phone = lawyerDto.Phone;
+
+            if (lawyerDto.Address != null)
+                lawyer.Address = lawyerDto.Address;
+
+            if (lawyerDto.Speciality != null)
+                lawyer.Speciality = lawyerDto.Speciality;
+
+            await _lawyerRepo.UpdateAsync(lawyer, autoSave: true);
 
             return ObjectMapper.Map<Lawyer, LawyerDto>(lawyer);
         }
