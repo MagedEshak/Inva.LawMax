@@ -19,6 +19,7 @@ namespace Inva.LawCases.Mapping
             CreateMap<CreateUpdateLawyerDto, Lawyer>()
                 .ForMember(dest => dest.Case, opt => opt.Ignore())
                .ForMember(dest => dest.TenantId, opt => opt.Ignore())
+               .ForMember(dest => dest.IsDeleted, opt => opt.Ignore())
                .ForMember(dest => dest.Id, opt => opt.Ignore())
                .ForMember(dest => dest.ExtraProperties, opt => opt.Ignore())
                 .IgnoreCreationAuditedObjectProperties().IgnoreAuditedObjectProperties();

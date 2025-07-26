@@ -126,7 +126,7 @@ namespace Inva.LawCases.AppServices
                 return false;
             }
 
-            await _caseRepo.DeleteAsync(caseGuid);
+            await _caseRepo.DeleteAsync(caseGuid, autoSave: true);
 
             return true;
         }

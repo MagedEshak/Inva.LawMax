@@ -48,15 +48,14 @@ namespace Inva.LawCases.AppServices
 
         public async Task<bool> DeleteLawyerAsync(Guid lawyerGuid)
         {
-            var lawyerEntityId = await _lawyerRepo.GetAsync(lawyerGuid);
+            var lawyer = await _lawyerRepo.FindAsync(lawyerGuid);
 
-            if (lawyerEntityId == null)
+            if (lawyer == null)
             {
                 return false;
             }
 
-            await _lawyerRepo.DeleteAsync(lawyerEntityId);
-
+            await _lawyerRepo.DeleteAsync(lawyer, autoSave: true);
             return true;
         }
 
@@ -64,6 +63,7 @@ namespace Inva.LawCases.AppServices
         public async Task<PagedResultDto<LawyerDto>> GetListAsync(PagedAndSortedResultRequestDto input)
         {
             var query = await _lawyerRepo.GetQueryableAsync();
+
 
             // تطبيق الترتيب (لو فيه)
             query = query.OrderBy(input.Sorting ?? "Name");
@@ -91,7 +91,7 @@ namespace Inva.LawCases.AppServices
 
             if (entity == null)
             {
-                throw new EntityNotFoundException("error");
+                throw new EntityNotFoundException("Lawyer Not Found");
             }
 
             return ObjectMapper.Map<Lawyer, LawyerDto>(entity);

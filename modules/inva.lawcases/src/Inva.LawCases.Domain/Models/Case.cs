@@ -4,12 +4,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Volo.Abp;
 using Volo.Abp.Domain.Entities.Auditing;
 using Volo.Abp.MultiTenancy;
 
 namespace Inva.LawCases.Models
 {
-    public class Case : AuditedAggregateRoot<Guid>, IMultiTenant
+    public class Case : AuditedAggregateRoot<Guid>, IMultiTenant,ISoftDelete
     {
 
         public string Title { get; set; }
@@ -25,6 +26,6 @@ namespace Inva.LawCases.Models
         public Lawyer? Lawyer { get; set; }
         public Hearing? Hearing { get; set; }
 
-
+        public bool IsDeleted { get; set; }
     }
 }

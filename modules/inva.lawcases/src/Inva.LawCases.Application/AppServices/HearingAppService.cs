@@ -56,7 +56,7 @@ namespace Inva.LawCases.AppServices
             if (entity == null)
             {
 
-                throw new EntityNotFoundException("error");
+                throw new EntityNotFoundException("Hearing Not Found");
             }
 
             return ObjectMapper.Map<Hearing, HearingDto>(entity);
@@ -102,7 +102,7 @@ namespace Inva.LawCases.AppServices
                 return false;
             }
 
-            await _hearingRepo.DeleteAsync(hearing);
+            await _hearingRepo.DeleteAsync(hearing, autoSave: true);
             return true;
         }
     }
