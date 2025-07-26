@@ -15,7 +15,8 @@ using Volo.Abp.Domain.Repositories;
 namespace Inva.LawCases.Controller
 {
     [Authorize]
-    [Route("api/law-cases/lawyer")]
+    [Route("api/[controller]")]
+    [ApiController]
     public class LawyerController : LawCasesController
     {
         public readonly ILawyerAppService _lawyerAppService;

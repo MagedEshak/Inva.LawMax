@@ -13,7 +13,8 @@ using Volo.Abp.AspNetCore.Mvc;
 namespace Inva.LawCases.Controller
 {
     [Authorize]
-    [Route("api/law-cases/case")]
+    [Route("api/[controller]")]
+    [ApiController]
     public class CaseController : LawCasesController, ICaseAppService
     {
         public readonly ICaseAppService _caseAppService;

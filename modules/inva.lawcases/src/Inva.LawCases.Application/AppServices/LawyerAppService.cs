@@ -29,7 +29,7 @@ namespace Inva.LawCases.AppServices
             _lawyerRepo = lawyerRepo;
         }
 
-    
+
 
         public async Task<LawyerDto> CreateLawyerAsync(CreateUpdateLawyerDto lawyerDto)
         {
@@ -72,11 +72,6 @@ namespace Inva.LawCases.AppServices
             return ObjectMapper.Map<List<Lawyer>, List<LawyerDto>>(lawyersList);
         }
 
-        public Task<LawyerDto> GetAsync(Guid id)
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task<LawyerDto> GetLawyerByIdAsync(Guid lawyerGuid)
         {
             var lawyerEntity = await _lawyerRepo.WithDetailsAsync(l => l.Case);
@@ -91,33 +86,36 @@ namespace Inva.LawCases.AppServices
             return ObjectMapper.Map<Lawyer, LawyerDto>(entity);
         }
 
-        public Task<PagedResultDto<LawyerDto>> GetListAsync(PagedAndSortedResultRequestDto input)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<LawyerDto> UpdateAsync(Guid id, CreateUpdateLawyerDto input)
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task<LawyerDto> UpdateLawyerAsync(Guid id, CreateUpdateLawyerDto lawyerDto)
         {
-            var lawyerEntityId = await _lawyerRepo.GetAsync(id);
+            var lawyerEntity = await _lawyerRepo.GetAsync(id);
 
-            if (lawyerEntityId == null)
+            if (lawyerEntity == null)
             {
                 throw new EntityNotFoundException("This Lawyer Not Found");
             }
 
-            ObjectMapper.Map(lawyerDto, lawyerEntityId);
+            // تحديث جزئي حسب القيم المرسلة
+            if (!string.IsNullOrWhiteSpace(lawyerDto.Name))
+                lawyerEntity.Name = lawyerDto.Name;
 
-            await _lawyerRepo.UpdateAsync(lawyerEntityId, autoSave: true);
+            if (!string.IsNullOrWhiteSpace(lawyerDto.Email))
+                lawyerEntity.Email = lawyerDto.Email;
 
-            return ObjectMapper.Map<Lawyer, LawyerDto>(lawyerEntityId);
+            if (!string.IsNullOrWhiteSpace(lawyerDto.Phone))
+                lawyerEntity.Phone = lawyerDto.Phone;
 
+            if (!string.IsNullOrWhiteSpace(lawyerDto.Address))
+                lawyerEntity.Address = lawyerDto.Address;
+
+            if (!string.IsNullOrWhiteSpace(lawyerDto.Speciality))
+                lawyerEntity.Speciality = lawyerDto.Speciality;
+
+            // تحديث في الداتابيز
+            await _lawyerRepo.UpdateAsync(lawyerEntity, autoSave: true);
+
+            return ObjectMapper.Map<Lawyer, LawyerDto>(lawyerEntity);
         }
-
 
     }
 }

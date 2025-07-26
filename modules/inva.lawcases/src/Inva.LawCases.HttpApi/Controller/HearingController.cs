@@ -12,7 +12,8 @@ using Volo.Abp.AspNetCore.Mvc;
 namespace Inva.LawCases.Controller
 {
     [Authorize]
-    [Route("api/law-cases/hearing")]
+    [Route("api/[controller]")]
+    [ApiController]
     public class HearingController : LawCasesController, IHearingAppService
     {
         public readonly IHearingAppService _hearingAppService;
