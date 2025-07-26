@@ -1,4 +1,5 @@
 ﻿using Inva.LawCases.DTOs.Case;
+using Inva.LawCases.DTOs.Hearing;
 using Inva.LawCases.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -8,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Volo.Abp;
+using Volo.Abp.Application.Dtos;
 using Volo.Abp.AspNetCore.Mvc;
 
 namespace Inva.LawCases.Controller
@@ -25,9 +27,9 @@ namespace Inva.LawCases.Controller
         }
 
         [HttpGet("all")]
-        public async Task<IEnumerable<CaseDto>> GetAllCaseAsync()
+        public async Task<PagedResultDto<CaseDto>> GetListAsync([FromQuery] PagedAndSortedResultRequestDto input)
         {
-           return await _caseAppService.GetAllCaseAsync();
+            return await _caseAppService.GetListAsync(input);
         }
 
         [HttpGet("{caseGuid}")]
@@ -42,7 +44,7 @@ namespace Inva.LawCases.Controller
            return await _caseAppService.CreateCaseAsync(caseDto);
         }
 
-        [HttpPut("{id}")]
+        [HttpPatch("{id}")]
         public async Task<CaseDto> UpdateCaseAsync(Guid id, [FromBody] CreateUpdateCaseDto caseDto)
         {
             return await _caseAppService.UpdateCaseAsync(id, caseDto);

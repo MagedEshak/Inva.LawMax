@@ -32,11 +32,13 @@ namespace Inva.LawCases.Controller
             return await _lawyerAppService.GetLawyerByIdAsync(id);
         }
 
+
         [HttpGet("all")]
-        public async Task<IEnumerable<LawyerDto>> GetListAsync()
+        public async Task<PagedResultDto<LawyerDto>> GetListAsync([FromQuery] PagedAndSortedResultRequestDto input)
         {
-            return await _lawyerAppService.GetAllLawyerAsync();
+            return await _lawyerAppService.GetListAsync(input);
         }
+
 
         [HttpPost]
         public async Task<LawyerDto> CreateAsync([FromBody] CreateUpdateLawyerDto input)
@@ -44,11 +46,17 @@ namespace Inva.LawCases.Controller
             return await _lawyerAppService.CreateLawyerAsync(input);
         }
 
-        [HttpPut("{id}")]
+        [HttpPatch("{id}")]
         public async Task<LawyerDto> UpdateAsync(Guid id, [FromBody] CreateUpdateLawyerDto input)
         {
             return await _lawyerAppService.UpdateLawyerAsync(id, input);
         }
+        //[HttpPatch("{id}")]
+        //public async Task<LawyerDto> UpdateAsync(Guid id, [FromBody] UpdateLawyerDto input)
+        //{
+        //    return await _lawyerAppService.UpdateLawyerAsync(id, input);
+        //}
+
 
         [HttpDelete("{id}")]
         public async Task DeleteAsync(Guid id)

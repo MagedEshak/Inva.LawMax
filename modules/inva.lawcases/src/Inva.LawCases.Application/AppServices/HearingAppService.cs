@@ -9,9 +9,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Volo.Abp.Application.Dtos;
 using Volo.Abp.Domain.Entities;
 using Volo.Abp.Domain.Repositories;
-using Volo.Abp.ObjectMapping;
+using System.Linq.Dynamic.Core;
 
 namespace Inva.LawCases.AppServices
 {
@@ -24,11 +25,28 @@ namespace Inva.LawCases.AppServices
             _hearingRepo = hearingRepo;
         }
 
-        public async Task<IEnumerable<HearingDto>> GetAllHearingAsync()
+        public async Task<PagedResultDto<HearingDto>> GetListAsync(PagedAndSortedResultRequestDto input)
         {
-            var hearings = await _hearingRepo.GetListAsync(); 
-            return ObjectMapper.Map<List<Hearing>, List<HearingDto>>(hearings);
+            var query = await _hearingRepo.GetQueryableAsync();
+
+            // تطبيق الترتيب (لو فيه)
+            query = query.OrderBy(input.Sorting ?? "Location");
+
+            // إجمالي العناصر قبل التصفية
+            var totalCount = await AsyncExecuter.CountAsync(query);
+
+            // Apply Pagination
+            var items = await AsyncExecuter.ToListAsync(
+                query.Skip(input.SkipCount).Take(input.MaxResultCount)
+            );
+
+            // تحويل للـ DTO
+            var hearingDtos = ObjectMapper.Map<List<Hearing>, List<HearingDto>>(items);
+
+            return new PagedResultDto<HearingDto>(totalCount, hearingDtos);
         }
+
+
 
         public async Task<HearingDto> GetHearingByIdAsync(Guid hearing)
         {
@@ -53,19 +71,26 @@ namespace Inva.LawCases.AppServices
             return ObjectMapper.Map<Hearing, HearingDto>(insertedHearing);
         }
 
-        public async Task<HearingDto> UpdateHearingAsync(Guid id, CreateUpdateHearingDto hearing)
+        public async Task<HearingDto> UpdateHearingAsync(Guid id, CreateUpdateHearingDto hearingDto)
         {
-            var hearingEntity = await _hearingRepo.GetAsync(id);
+            var hearing = await _hearingRepo.GetAsync(id);
 
-            if (hearingEntity == null)
+            if (hearing == null)
             {
                 throw new EntityNotFoundException("This Hearing Not Found");
             }
 
-            ObjectMapper.Map(hearingEntity, hearing);
-            await _hearingRepo.UpdateAsync(hearingEntity, autoSave: true);
+           
+            if (hearingDto.Date != null)
+                hearing.Date = (DateTime)hearingDto.Date;
 
-            return ObjectMapper.Map<Hearing, HearingDto>(hearingEntity);
+            if (hearingDto.Location != null)
+                hearing.Location = hearingDto.Location;
+
+
+            await _hearingRepo.UpdateAsync(hearing, autoSave: true);
+
+            return ObjectMapper.Map<Hearing, HearingDto>(hearing);
         }
 
         public async Task<bool> DeleteHearingAsync(Guid hearing)

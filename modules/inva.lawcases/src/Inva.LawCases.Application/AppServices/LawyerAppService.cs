@@ -1,16 +1,16 @@
-﻿using Inva.LawCases.Base;
+﻿
 using Inva.LawCases.Interfaces;
 using Inva.LawCases.Models;
 using Inva.LawMax.DTOs.Lawyer;
-using Microsoft.AspNetCore.Authorization;
+
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+
 using System.Threading.Tasks;
-using Volo.Abp;
+
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
 using System.Linq.Dynamic.Core;
@@ -63,14 +63,28 @@ namespace Inva.LawCases.AppServices
             return true;
         }
 
-        public async Task<IEnumerable<LawyerDto>> GetAllLawyerAsync()
+
+        public async Task<PagedResultDto<LawyerDto>> GetListAsync(PagedAndSortedResultRequestDto input)
         {
-            var lawyersQuery = await _lawyerRepo.WithDetailsAsync(l => l.Case);
+            var query = await _lawyerRepo.GetQueryableAsync();
 
-            var lawyersList = lawyersQuery.ToList();
+            // تطبيق الترتيب (لو فيه)
+            query = query.OrderBy(input.Sorting ?? "Name");
 
-            return ObjectMapper.Map<List<Lawyer>, List<LawyerDto>>(lawyersList);
+            // إجمالي العناصر قبل التصفية
+            var totalCount = await AsyncExecuter.CountAsync(query);
+
+            // Apply Pagination
+            var items = await AsyncExecuter.ToListAsync(
+                query.Skip(input.SkipCount).Take(input.MaxResultCount)
+            );
+
+            // تحويل للـ DTO
+            var lawyerDtos = ObjectMapper.Map<List<Lawyer>, List<LawyerDto>>(items);
+
+            return new PagedResultDto<LawyerDto>(totalCount, lawyerDtos);
         }
+
 
         public async Task<LawyerDto> GetLawyerByIdAsync(Guid lawyerGuid)
         {
@@ -88,33 +102,31 @@ namespace Inva.LawCases.AppServices
 
         public async Task<LawyerDto> UpdateLawyerAsync(Guid id, CreateUpdateLawyerDto lawyerDto)
         {
-            var lawyerEntity = await _lawyerRepo.GetAsync(id);
+            var lawyer = await _lawyerRepo.GetAsync(id);
 
-            if (lawyerEntity == null)
+            if (lawyer == null)
             {
                 throw new EntityNotFoundException("This Lawyer Not Found");
             }
 
-            // تحديث جزئي حسب القيم المرسلة
-            if (!string.IsNullOrWhiteSpace(lawyerDto.Name))
-                lawyerEntity.Name = lawyerDto.Name;
+            if (lawyerDto.Name != null)
+                lawyer.Name = lawyerDto.Name;
 
-            if (!string.IsNullOrWhiteSpace(lawyerDto.Email))
-                lawyerEntity.Email = lawyerDto.Email;
+            if (lawyerDto.Email != null)
+                lawyer.Email = lawyerDto.Email;
 
-            if (!string.IsNullOrWhiteSpace(lawyerDto.Phone))
-                lawyerEntity.Phone = lawyerDto.Phone;
+            if (lawyerDto.Phone != null)
+                lawyer.Phone = lawyerDto.Phone;
 
-            if (!string.IsNullOrWhiteSpace(lawyerDto.Address))
-                lawyerEntity.Address = lawyerDto.Address;
+            if (lawyerDto.Address != null)
+                lawyer.Address = lawyerDto.Address;
 
-            if (!string.IsNullOrWhiteSpace(lawyerDto.Speciality))
-                lawyerEntity.Speciality = lawyerDto.Speciality;
+            if (lawyerDto.Speciality != null)
+                lawyer.Speciality = lawyerDto.Speciality;
 
-            // تحديث في الداتابيز
-            await _lawyerRepo.UpdateAsync(lawyerEntity, autoSave: true);
+            await _lawyerRepo.UpdateAsync(lawyer, autoSave: true);
 
-            return ObjectMapper.Map<Lawyer, LawyerDto>(lawyerEntity);
+            return ObjectMapper.Map<Lawyer, LawyerDto>(lawyer);
         }
 
     }

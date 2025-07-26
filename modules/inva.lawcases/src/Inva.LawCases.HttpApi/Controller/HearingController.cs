@@ -1,5 +1,6 @@
 ﻿using Inva.LawCases.DTOs.Hearing;
 using Inva.LawCases.Interfaces;
+using Inva.LawMax.DTOs.Lawyer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -7,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Volo.Abp.Application.Dtos;
 using Volo.Abp.AspNetCore.Mvc;
 
 namespace Inva.LawCases.Controller
@@ -24,10 +26,11 @@ namespace Inva.LawCases.Controller
         }
 
         [HttpGet("all")]
-        public async Task<IEnumerable<HearingDto>> GetAllHearingAsync()
+        public async Task<PagedResultDto<HearingDto>> GetListAsync([FromQuery] PagedAndSortedResultRequestDto input)
         {
-            return await _hearingAppService.GetAllHearingAsync();
+            return await _hearingAppService.GetListAsync(input);
         }
+
 
         [HttpGet("{hearingGuid}")]
         public async Task<HearingDto> GetHearingByIdAsync(Guid hearingGuid)
@@ -41,7 +44,7 @@ namespace Inva.LawCases.Controller
             return await _hearingAppService.CreateHearingAsync(hearingDto);
         }
        
-        [HttpPut("{id}")]
+        [HttpPatch("{id}")]
         public async Task<HearingDto> UpdateHearingAsync(Guid id, [FromBody] CreateUpdateHearingDto hearingDto)
         {
             return await _hearingAppService.UpdateHearingAsync(id, hearingDto);

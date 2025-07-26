@@ -14,13 +14,16 @@ namespace Inva.LawCases.Validations
         {
             RuleFor(x => x.Date)
             .GreaterThan(DateTime.MinValue).WithMessage("Date must be valid.")
-            .LessThan(DateTime.Now.AddYears(5)).WithMessage("Date must be within 5 years.");
+            .LessThan(DateTime.Now.AddYears(5)).WithMessage("Date must be within 5 years.")
+            .When(d => d.Date != null);
+
 
             RuleFor(x => x.Location)
                 .NotEmpty().WithMessage("Location is required.")
-                .MaximumLength(200).WithMessage("Location must be at most 200 characters.");
+                .MaximumLength(200).WithMessage("Location must be at most 200 characters.")
+                .When(d => d.Location != null);
 
-         
+
         }
     }
 }

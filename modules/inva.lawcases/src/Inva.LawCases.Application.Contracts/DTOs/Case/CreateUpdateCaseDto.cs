@@ -12,9 +12,9 @@ namespace Inva.LawCases.DTOs.Case
 {
     public class CreateUpdateCaseDto
     {
-        public string Title { get; set; }
+        public string? Title { get; set; }
         public string? Description { get; set; }
-        public Status Status { get; set; }
+        public Status? Status { get; set; }
 
 
         public Guid? LawyerId { get; set; }

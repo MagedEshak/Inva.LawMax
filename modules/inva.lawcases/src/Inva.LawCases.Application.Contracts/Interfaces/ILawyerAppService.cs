@@ -14,7 +14,7 @@ namespace Inva.LawCases.Interfaces
     {
         Task<LawyerDto> CreateLawyerAsync(CreateUpdateLawyerDto LawyerDto);
         Task<LawyerDto> UpdateLawyerAsync(Guid id, CreateUpdateLawyerDto LawyerDto);
-        Task<IEnumerable<LawyerDto>> GetAllLawyerAsync();
+        Task<PagedResultDto<LawyerDto>> GetListAsync(PagedAndSortedResultRequestDto input);
         Task<LawyerDto> GetLawyerByIdAsync(Guid LawyerGuid);
         Task<bool> DeleteLawyerAsync(Guid LawyerGuid);
     }
