@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Inva.LawCases.Enums;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,13 +12,19 @@ namespace Inva.LawCases.Models
     public class Case : AuditedAggregateRoot<Guid>, IMultiTenant
     {
 
-        public int Number { get; set; }
-        public int Year { get; set; }
-        public string LitigationDegree { get; set; }
-        public string FinalVerdict { get; set; }
+        public string Title { get; set; }
+        public string? Description { get; set; }
+        public Status Status { get; set; }
 
-        public virtual ICollection<Lawyer> Lawyers { get; set; } = new List<Lawyer>();
-        public virtual ICollection<Hearing> Hearings { get; set; } = new List<Hearing>();
+
+        public Guid? LawyerId { get; set; }
+        public Guid? HearingId { get; set; }
         public Guid? TenantId { get; set; }
+
+
+        public Lawyer? Lawyer { get; set; }
+        public Hearing? Hearing { get; set; }
+
+
     }
 }

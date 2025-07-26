@@ -44,14 +44,16 @@ namespace Inva.LawMax.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("CreatorId");
 
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("ExtraProperties")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("ExtraProperties");
 
-                    b.Property<string>("FinalVerdict")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<Guid?>("HearingId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime?>("LastModificationTime")
                         .HasColumnType("datetime2")
@@ -61,21 +63,29 @@ namespace Inva.LawMax.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("LastModifierId");
 
-                    b.Property<string>("LitigationDegree")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<Guid?>("LawyerId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("Number")
+                    b.Property<int>("Status")
                         .HasColumnType("int");
 
                     b.Property<Guid?>("TenantId")
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("TenantId");
 
-                    b.Property<int>("Year")
-                        .HasColumnType("int");
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("HearingId")
+                        .IsUnique()
+                        .HasFilter("[HearingId] IS NOT NULL");
+
+                    b.HasIndex("LawyerId")
+                        .IsUnique()
+                        .HasFilter("[LawyerId] IS NOT NULL");
 
                     b.ToTable("Cases");
                 });
@@ -83,9 +93,6 @@ namespace Inva.LawMax.Migrations
             modelBuilder.Entity("Inva.LawCases.Models.Hearing", b =>
                 {
                     b.Property<Guid>("Id")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("CaseId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("ConcurrencyStamp")
@@ -106,10 +113,6 @@ namespace Inva.LawMax.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Decision")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("ExtraProperties")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)")
@@ -123,13 +126,15 @@ namespace Inva.LawMax.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("LastModifierId");
 
+                    b.Property<string>("Location")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<Guid?>("TenantId")
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("TenantId");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CaseId");
 
                     b.ToTable("Hearings");
                 });
@@ -142,9 +147,6 @@ namespace Inva.LawMax.Migrations
                     b.Property<string>("Address")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid?>("CaseId")
-                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
@@ -161,6 +163,10 @@ namespace Inva.LawMax.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("CreatorId");
 
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("ExtraProperties")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)")
@@ -174,15 +180,15 @@ namespace Inva.LawMax.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("LastModifierId");
 
-                    b.Property<string>("Mobile")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Position")
+                    b.Property<string>("Phone")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Speciality")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -191,8 +197,6 @@ namespace Inva.LawMax.Migrations
                         .HasColumnName("TenantId");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CaseId");
 
                     b.ToTable("Lawyers");
                 });
@@ -2078,24 +2082,19 @@ namespace Inva.LawMax.Migrations
                     b.ToTable("AbpTenantConnectionStrings", (string)null);
                 });
 
-            modelBuilder.Entity("Inva.LawCases.Models.Hearing", b =>
+            modelBuilder.Entity("Inva.LawCases.Models.Case", b =>
                 {
-                    b.HasOne("Inva.LawCases.Models.Case", "Case")
-                        .WithMany("Hearings")
-                        .HasForeignKey("CaseId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.HasOne("Inva.LawCases.Models.Hearing", "Hearing")
+                        .WithOne("Case")
+                        .HasForeignKey("Inva.LawCases.Models.Case", "HearingId");
 
-                    b.Navigation("Case");
-                });
+                    b.HasOne("Inva.LawCases.Models.Lawyer", "Lawyer")
+                        .WithOne("Case")
+                        .HasForeignKey("Inva.LawCases.Models.Case", "LawyerId");
 
-            modelBuilder.Entity("Inva.LawCases.Models.Lawyer", b =>
-                {
-                    b.HasOne("Inva.LawCases.Models.Case", "Case")
-                        .WithMany("Lawyers")
-                        .HasForeignKey("CaseId");
+                    b.Navigation("Hearing");
 
-                    b.Navigation("Case");
+                    b.Navigation("Lawyer");
                 });
 
             modelBuilder.Entity("Volo.Abp.AuditLogging.AuditLogAction", b =>
@@ -2249,11 +2248,14 @@ namespace Inva.LawMax.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Inva.LawCases.Models.Case", b =>
+            modelBuilder.Entity("Inva.LawCases.Models.Hearing", b =>
                 {
-                    b.Navigation("Hearings");
+                    b.Navigation("Case");
+                });
 
-                    b.Navigation("Lawyers");
+            modelBuilder.Entity("Inva.LawCases.Models.Lawyer", b =>
+                {
+                    b.Navigation("Case");
                 });
 
             modelBuilder.Entity("Volo.Abp.AuditLogging.AuditLog", b =>

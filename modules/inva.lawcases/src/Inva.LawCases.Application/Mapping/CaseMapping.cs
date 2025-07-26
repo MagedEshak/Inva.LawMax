@@ -15,16 +15,16 @@ namespace Inva.LawCases.Mapping
         {
             CreateMap<Case, CaseDto>();
             CreateMap<CreateUpdateCaseDto, Case>()
-                .ForMember(dest => dest.Lawyers, opt => opt.Ignore())
-                .ForMember(dest => dest.Hearings, opt => opt.Ignore())
+                .ForMember(dest => dest.Lawyer, opt => opt.Ignore())
+                .ForMember(dest => dest.Hearing, opt => opt.Ignore())
                 .ForMember(dest => dest.TenantId, opt => opt.Ignore())
                 .ForMember(dest => dest.Id, opt => opt.Ignore())
-    .ForMember(dest => dest.CreationTime, opt => opt.Ignore())
-    .ForMember(dest => dest.CreatorId, opt => opt.Ignore())
-    .ForMember(dest => dest.LastModificationTime, opt => opt.Ignore())
-    .ForMember(dest => dest.LastModifierId, opt => opt.Ignore())
-    .ForMember(dest => dest.ConcurrencyStamp, opt => opt.Ignore())
-    .ForMember(dest => dest.ExtraProperties, opt => opt.Ignore()); ;
+                .ForMember(dest => dest.CreationTime, opt => opt.Ignore())
+                .ForMember(dest => dest.CreatorId, opt => opt.Ignore())
+                .ForMember(dest => dest.LastModificationTime, opt => opt.Ignore())
+                .ForMember(dest => dest.LastModifierId, opt => opt.Ignore())
+                .ForMember(dest => dest.ConcurrencyStamp, opt => opt.Ignore())
+                .ForMember(dest => dest.ExtraProperties, opt => opt.Ignore());
         }
     }
 }

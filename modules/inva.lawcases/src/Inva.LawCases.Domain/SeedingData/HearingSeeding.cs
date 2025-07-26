@@ -39,20 +39,20 @@ namespace Inva.LawCases._ٍSeedingData
                 new()
                 {
                     Date = DateTime.Now.AddDays(-30),
-                    Decision = "Postponed for evidence review",
-                    CaseId = existingCase.Id
+                    Location = "Cairo",
+                  
                 },
                 new()
                 {
                     Date = DateTime.Now.AddDays(-15),
-                    Decision = "Judge requested more documentation",
-                    CaseId = existingCase.Id
+                    Location = "Assuit",
+                   
                 },
                 new()
                 {
                     Date = DateTime.Now,
-                    Decision = "Final verdict issued",
-                    CaseId = existingCase.Id
+                    Location = "Minnya",
+                    
                 }
             };
 
