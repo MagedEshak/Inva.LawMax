@@ -1,4 +1,6 @@
-﻿using Inva.LawCases.Models;
+﻿
+using Inva.LawCases.Enums;
+using Inva.LawCases.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,21 +31,9 @@ namespace Inva.LawCases._ٍSeedingData
             {
                 new Case
                 {
-                    Number = 101,
-                    Year = 2023,
-                    LitigationDegree = "First Instance",
-                    FinalVerdict = "Under Review",
-                    Lawyers = new List<Lawyer>(),
-                    Hearings = new List<Hearing>()
-                },
-                new Case
-                {
-                    Number = 102,
-                    Year = 2024,
-                    LitigationDegree = "Appeal",
-                    FinalVerdict = "Postponed",
-                    Lawyers = new List<Lawyer>(),
-                    Hearings = new List<Hearing>()
+                  Title = "Financial Compensation Case",
+                  Description = "A case regarding monetary compensation for damages.",
+                  Status = Status.Open, // غيّر حسب enum عندك
                 }
             };
 

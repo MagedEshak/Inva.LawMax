@@ -32,6 +32,7 @@ public class LawCasesDbContext : AbpDbContext<LawCasesDbContext>, ILawCasesDbCon
 
 
         builder.ApplyConfiguration(new LawyerConfiguration());
+        builder.ApplyConfiguration(new CaseConfiguration());
         builder.ApplyConfiguration(new HearingConfiguration());
 
     }

@@ -18,8 +18,8 @@ namespace Inva.LawMax;
     typeof(AbpAccountHttpApiClientModule),
     typeof(AbpIdentityHttpApiClientModule),
     typeof(AbpTenantManagementHttpApiClientModule),
-    typeof(AbpSettingManagementHttpApiClientModule)
-    //typeof(LawCasesHttpApiClientModule)
+    typeof(AbpSettingManagementHttpApiClientModule),
+    typeof(LawCasesHttpApiClientModule)
 )]
 public class LawMaxHttpApiClientModule : AbpModule
 {

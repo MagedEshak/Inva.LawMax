@@ -1,4 +1,5 @@
 ﻿using Inva.LawCases.DTOs.Hearing;
+using Inva.LawCases.Enums;
 using Inva.LawMax.DTOs.Lawyer;
 using System;
 using System.Collections.Generic;
@@ -11,13 +12,16 @@ namespace Inva.LawCases.DTOs.Case
 {
     public class CreateUpdateCaseDto
     {
-        public int Number { get; set; }
-        public int Year { get; set; }
-        public string LitigationDegree { get; set; }
-        public string FinalVerdict { get; set; }
+        public string Title { get; set; }
+        public string? Description { get; set; }
+        public Status Status { get; set; }
 
 
-        public List<Guid> LawyerIds { get; set; } = new();
-        public List<CreateUpdateHearingDto> Hearings { get; set; } = new();
+        public Guid? LawyerId { get; set; }
+        public Guid? HearingId { get; set; }
+
+        public Guid? TenantId { get; set; }
+
+
     }
 }

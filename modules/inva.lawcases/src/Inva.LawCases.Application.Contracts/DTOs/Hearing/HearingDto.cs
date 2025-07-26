@@ -11,8 +11,9 @@ namespace Inva.LawCases.DTOs.Hearing
     {
         public Guid Id { get; set; }
         public DateTime Date { get; set; } = DateTime.Now;
-        public string Decision { get; set; }
+        public string Location { get; set; }
 
+    
         public Guid? CaseId { get; set; }
     }
 }

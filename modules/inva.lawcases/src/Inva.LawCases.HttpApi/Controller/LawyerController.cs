@@ -14,6 +14,7 @@ using Volo.Abp.Domain.Repositories;
 
 namespace Inva.LawCases.Controller
 {
+    [Authorize]
     [Route("api/law-cases/lawyer")]
     public class LawyerController : LawCasesController
     {
@@ -27,30 +28,31 @@ namespace Inva.LawCases.Controller
         [HttpGet("{id}")]
         public async Task<LawyerDto> GetAsync(Guid id)
         {
-            return await _lawyerAppService.GetAsync(id);
+            return await _lawyerAppService.GetLawyerByIdAsync(id);
         }
 
         [HttpGet("all")]
-        public async Task<PagedResultDto<LawyerDto>> GetListAsync(PagedAndSortedResultRequestDto input)
+        public async Task<IEnumerable<LawyerDto>> GetListAsync()
         {
-            return await _lawyerAppService.GetListAsync(input);
+            return await _lawyerAppService.GetAllLawyerAsync();
         }
+
         [HttpPost]
-        public async Task<LawyerDto> CreateAsync(CreateUpdateLawyerDto input)
+        public async Task<LawyerDto> CreateAsync([FromBody] CreateUpdateLawyerDto input)
         {
-            return await _lawyerAppService.CreateAsync(input);
+            return await _lawyerAppService.CreateLawyerAsync(input);
         }
 
         [HttpPut("{id}")]
-        public async Task<LawyerDto> UpdateAsync(Guid id, CreateUpdateLawyerDto input)
+        public async Task<LawyerDto> UpdateAsync(Guid id, [FromBody] CreateUpdateLawyerDto input)
         {
-            return await _lawyerAppService.UpdateAsync(id, input);
+            return await _lawyerAppService.UpdateLawyerAsync(id, input);
         }
 
         [HttpDelete("{id}")]
         public async Task DeleteAsync(Guid id)
         {
-            await _lawyerAppService.DeleteAsync(id);
+            await _lawyerAppService.DeleteLawyerAsync(id);
         }
     }
 }

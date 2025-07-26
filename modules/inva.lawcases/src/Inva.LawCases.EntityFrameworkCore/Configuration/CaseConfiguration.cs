@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Volo.Abp.EntityFrameworkCore.Modeling;
 
 namespace Inva.LawCases.Configuration
 {
@@ -14,7 +15,20 @@ namespace Inva.LawCases.Configuration
     {
         public void Configure(EntityTypeBuilder<Case> builder)
         {
-            throw new NotImplementedException();
+            builder.ToTable("Cases");
+
+            // to set general value automatic
+            builder.ConfigureByConvention();
+
+            builder.HasOne(l => l.Lawyer)
+                  .WithOne(c => c.Case)
+                  .HasForeignKey<Case>(l => l.LawyerId)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            builder.HasOne(l => l.Hearing)
+                 .WithOne(c => c.Case)
+                 .HasForeignKey<Case>(l => l.HearingId)
+                 .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

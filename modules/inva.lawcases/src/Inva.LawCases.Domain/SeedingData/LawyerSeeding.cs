@@ -41,18 +41,19 @@ namespace Inva.LawCases._ٍSeedingData
                 new()
                 {
                     Name = "Mona Abdallah",
-                    Position = "Defense Lawyer",
-                    Mobile = "01098765432",
+                    Speciality = "Defense Lawyer",
+                    Phone = "01098765432",
                     Address = "Tanta",
-                    CaseId = existingCase.Id
+                    Email = "Mona@gmail.com"
+
                 },
                 new()
                 {
-                    Name = "Mahmoud Shawky",
-                    Position = "Lead Attorney",
-                    Mobile = "01012345678",
-                    Address = "Alexandria",
-                    CaseId = existingCase.Id
+                    Name = "Samuel Ashraf",
+                    Speciality = "Defense Lawyer",
+                    Phone = "01098765555",
+                    Address = "Minya",
+                    Email = "samuel@gmail.com"
                 }
                 // Add more lawyers if needed
             };

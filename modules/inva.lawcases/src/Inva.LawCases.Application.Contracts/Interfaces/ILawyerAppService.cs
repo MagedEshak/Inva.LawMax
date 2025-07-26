@@ -1,4 +1,5 @@
-﻿using Inva.LawMax.DTOs.Lawyer;
+﻿
+using Inva.LawMax.DTOs.Lawyer;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,8 +10,12 @@ using Volo.Abp.Application.Services;
 
 namespace Inva.LawCases.Interfaces
 {
-    public interface ILawyerAppService:ICrudAppService<LawyerDto,Guid, PagedAndSortedResultRequestDto,CreateUpdateLawyerDto>
+    public interface ILawyerAppService
     {
-     
+        Task<LawyerDto> CreateLawyerAsync(CreateUpdateLawyerDto LawyerDto);
+        Task<LawyerDto> UpdateLawyerAsync(Guid id, CreateUpdateLawyerDto LawyerDto);
+        Task<IEnumerable<LawyerDto>> GetAllLawyerAsync();
+        Task<LawyerDto> GetLawyerByIdAsync(Guid LawyerGuid);
+        Task<bool> DeleteLawyerAsync(Guid LawyerGuid);
     }
 }

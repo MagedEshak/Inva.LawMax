@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Volo.Abp.EntityFrameworkCore.Modeling;
 
 namespace Inva.LawCases.Configuration
 {
@@ -15,10 +16,10 @@ namespace Inva.LawCases.Configuration
         {
             builder.ToTable("Hearings");
 
-            builder.HasOne(l => l.Case)
-                   .WithMany(c => c.Hearings)
-                   .HasForeignKey(l => l.CaseId)
-                   .OnDelete(DeleteBehavior.Cascade);
+            // to set general value automatic
+            builder.ConfigureByConvention();
+
+        
         }
     }
 }

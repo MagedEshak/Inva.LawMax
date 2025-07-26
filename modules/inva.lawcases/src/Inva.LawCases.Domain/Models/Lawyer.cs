@@ -13,12 +13,13 @@ namespace Inva.LawCases.Models
 
     {
         public string Name { get; set; }
-        public string Position { get; set; }
-        public string Mobile { get; set; }
+        public string Email { get; set; }
+        public string Phone { get; set; }
         public string Address { get; set; }
+        public string Speciality { get; set; }
 
-        public Guid? CaseId { get; set; }
-        public virtual Case Case { get; set; }
+
+        public Case? Case { get; set; }
 
         public Guid? TenantId { get; set; }
     }

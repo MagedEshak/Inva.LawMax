@@ -1,5 +1,6 @@
 ﻿using Inva.LawCases.DTOs.Hearing;
 using Inva.LawCases.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -10,6 +11,7 @@ using Volo.Abp.AspNetCore.Mvc;
 
 namespace Inva.LawCases.Controller
 {
+    [Authorize]
     [Route("api/law-cases/hearing")]
     public class HearingController : LawCasesController, IHearingAppService
     {
@@ -33,13 +35,13 @@ namespace Inva.LawCases.Controller
         }
 
         [HttpPost]
-        public async Task<HearingDto> CreateHearingAsync(CreateUpdateHearingDto hearingDto)
+        public async Task<HearingDto> CreateHearingAsync([FromBody] CreateUpdateHearingDto hearingDto)
         {
             return await _hearingAppService.CreateHearingAsync(hearingDto);
         }
        
         [HttpPut("{id}")]
-        public async Task<HearingDto> UpdateHearingAsync(Guid id, CreateUpdateHearingDto hearingDto)
+        public async Task<HearingDto> UpdateHearingAsync(Guid id, [FromBody] CreateUpdateHearingDto hearingDto)
         {
             return await _hearingAppService.UpdateHearingAsync(id, hearingDto);
         }
