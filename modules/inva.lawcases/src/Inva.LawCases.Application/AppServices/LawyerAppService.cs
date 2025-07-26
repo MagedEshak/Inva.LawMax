@@ -2,20 +2,18 @@
 using Inva.LawCases.Interfaces;
 using Inva.LawCases.Models;
 using Inva.LawMax.DTOs.Lawyer;
-
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-
+using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
-
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
-using System.Linq.Dynamic.Core;
-using Volo.Abp.Domain.Repositories;
+using Volo.Abp.Data;
 using Volo.Abp.Domain.Entities;
+using Volo.Abp.Domain.Repositories;
 
 
 namespace Inva.LawCases.AppServices
@@ -107,6 +105,11 @@ namespace Inva.LawCases.AppServices
                 throw new EntityNotFoundException("This Lawyer Not Found");
             }
 
+            // تحقق من الـ ConcurrencyStamp
+            if (!string.IsNullOrWhiteSpace(lawyerDto.ConcurrencyStamp) && lawyerDto.ConcurrencyStamp != lawyer.ConcurrencyStamp)
+            {
+                throw new AbpDbConcurrencyException("The record has been modified by someone else.");
+            }
 
             if (lawyerDto.Name != null)
                 lawyer.Name = lawyerDto.Name;

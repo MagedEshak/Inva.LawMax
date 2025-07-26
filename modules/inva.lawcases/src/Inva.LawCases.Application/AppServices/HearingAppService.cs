@@ -7,12 +7,13 @@ using Inva.LawMax.DTOs.Lawyer;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Dynamic.Core;
 using System.Text;
 using System.Threading.Tasks;
 using Volo.Abp.Application.Dtos;
+using Volo.Abp.Data;
 using Volo.Abp.Domain.Entities;
 using Volo.Abp.Domain.Repositories;
-using System.Linq.Dynamic.Core;
 
 namespace Inva.LawCases.AppServices
 {
@@ -80,7 +81,11 @@ namespace Inva.LawCases.AppServices
                 throw new EntityNotFoundException("This Hearing Not Found");
             }
 
-           
+            if (!string.IsNullOrWhiteSpace(hearingDto.ConcurrencyStamp) && hearingDto.ConcurrencyStamp != hearing.ConcurrencyStamp)
+            {
+                throw new AbpDbConcurrencyException("The record has been modified by someone else.");
+            }
+
             if (hearingDto.Date != null)
                 hearing.Date = (DateTime)hearingDto.Date;
 

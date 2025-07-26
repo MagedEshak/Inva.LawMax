@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Volo.Abp.Application.Dtos;
+using Volo.Abp.Domain.Entities;
 
 namespace Inva.LawMax.DTOs.Lawyer
 {
@@ -17,6 +18,6 @@ namespace Inva.LawMax.DTOs.Lawyer
 
         public Guid? CaseId { get; set; }
 
-        public string? ConcurrencyStamp { get; set; } = null;
+        public string? ConcurrencyStamp { get; set; }
     }
 }

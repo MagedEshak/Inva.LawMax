@@ -21,7 +21,7 @@ namespace Inva.LawCases.DTOs.Case
         public Guid? HearingId { get; set; }
 
         public Guid? TenantId { get; set; }
-
+        public string? ConcurrencyStamp { get; set; }
 
     }
 }
