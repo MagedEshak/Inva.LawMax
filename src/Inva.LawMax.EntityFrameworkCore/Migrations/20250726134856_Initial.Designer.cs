@@ -13,7 +13,7 @@ using Volo.Abp.EntityFrameworkCore;
 namespace Inva.LawMax.Migrations
 {
     [DbContext(typeof(LawMaxDbContext))]
-    [Migration("20250726005747_Initial")]
+    [Migration("20250726134856_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -57,6 +57,12 @@ namespace Inva.LawMax.Migrations
 
                     b.Property<Guid?>("HearingId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false)
+                        .HasColumnName("IsDeleted");
 
                     b.Property<DateTime?>("LastModificationTime")
                         .HasColumnType("datetime2")
@@ -121,6 +127,12 @@ namespace Inva.LawMax.Migrations
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("ExtraProperties");
 
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false)
+                        .HasColumnName("IsDeleted");
+
                     b.Property<DateTime?>("LastModificationTime")
                         .HasColumnType("datetime2")
                         .HasColumnName("LastModificationTime");
@@ -174,6 +186,12 @@ namespace Inva.LawMax.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("ExtraProperties");
+
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false)
+                        .HasColumnName("IsDeleted");
 
                     b.Property<DateTime?>("LastModificationTime")
                         .HasColumnType("datetime2")

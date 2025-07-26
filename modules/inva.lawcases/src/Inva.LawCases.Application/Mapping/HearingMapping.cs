@@ -17,6 +17,7 @@ namespace Inva.LawCases.Mapping
             CreateMap<CreateUpdateHearingDto, Hearing>()
                 .ForMember(dest => dest.Case, opt => opt.Ignore())
                .ForMember(dest => dest.TenantId, opt => opt.Ignore())
+               .ForMember(dest => dest.IsDeleted, opt => opt.Ignore())
             .ForMember(dest => dest.Id, opt => opt.Ignore())
             .ForMember(dest => dest.CreationTime, opt => opt.Ignore())
             .ForMember(dest => dest.CreatorId, opt => opt.Ignore())

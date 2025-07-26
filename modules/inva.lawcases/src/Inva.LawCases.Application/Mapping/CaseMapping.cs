@@ -18,6 +18,7 @@ namespace Inva.LawCases.Mapping
                 .ForMember(dest => dest.Lawyer, opt => opt.Ignore())
                 .ForMember(dest => dest.Hearing, opt => opt.Ignore())
                 .ForMember(dest => dest.TenantId, opt => opt.Ignore())
+                .ForMember(dest => dest.IsDeleted, opt => opt.Ignore())
                 .ForMember(dest => dest.Id, opt => opt.Ignore())
                 .ForMember(dest => dest.CreationTime, opt => opt.Ignore())
                 .ForMember(dest => dest.CreatorId, opt => opt.Ignore())

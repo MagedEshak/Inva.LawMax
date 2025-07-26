@@ -1,21 +1,19 @@
-﻿using Inva.LawCases.Base;
+﻿
 using Inva.LawCases.Interfaces;
 using Inva.LawCases.Models;
 using Inva.LawMax.DTOs.Lawyer;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
-using Volo.Abp;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
-using System.Linq.Dynamic.Core;
-using Volo.Abp.Domain.Repositories;
+using Volo.Abp.Data;
 using Volo.Abp.Domain.Entities;
+using Volo.Abp.Domain.Repositories;
 
 
 namespace Inva.LawCases.AppServices
@@ -28,8 +26,6 @@ namespace Inva.LawCases.AppServices
         {
             _lawyerRepo = lawyerRepo;
         }
-
-    
 
         public async Task<LawyerDto> CreateLawyerAsync(CreateUpdateLawyerDto lawyerDto)
         {
@@ -48,34 +44,42 @@ namespace Inva.LawCases.AppServices
             }
         }
 
-
         public async Task<bool> DeleteLawyerAsync(Guid lawyerGuid)
         {
-            var lawyerEntityId = await _lawyerRepo.GetAsync(lawyerGuid);
+            var lawyer = await _lawyerRepo.FindAsync(lawyerGuid);
 
-            if (lawyerEntityId == null)
+            if (lawyer == null)
             {
                 return false;
             }
 
-            await _lawyerRepo.DeleteAsync(lawyerEntityId);
-
+            await _lawyerRepo.DeleteAsync(lawyer, autoSave: true);
             return true;
         }
 
-        public async Task<IEnumerable<LawyerDto>> GetAllLawyerAsync()
+
+        public async Task<PagedResultDto<LawyerDto>> GetListAsync(PagedAndSortedResultRequestDto input)
         {
-            var lawyersQuery = await _lawyerRepo.WithDetailsAsync(l => l.Case);
+            var query = await _lawyerRepo.GetQueryableAsync();
 
-            var lawyersList = lawyersQuery.ToList();
 
-            return ObjectMapper.Map<List<Lawyer>, List<LawyerDto>>(lawyersList);
+            // تطبيق الترتيب (لو فيه)
+            query = query.OrderBy(input.Sorting ?? "Name");
+
+            // إجمالي العناصر قبل التصفية
+            var totalCount = await AsyncExecuter.CountAsync(query);
+
+            // Apply Pagination
+            var items = await AsyncExecuter.ToListAsync(
+                query.Skip(input.SkipCount).Take(input.MaxResultCount)
+            );
+
+            // تحويل للـ DTO
+            var lawyerDtos = ObjectMapper.Map<List<Lawyer>, List<LawyerDto>>(items);
+
+            return new PagedResultDto<LawyerDto>(totalCount, lawyerDtos);
         }
 
-        public Task<LawyerDto> GetAsync(Guid id)
-        {
-            throw new NotImplementedException();
-        }
 
         public async Task<LawyerDto> GetLawyerByIdAsync(Guid lawyerGuid)
         {
@@ -85,39 +89,46 @@ namespace Inva.LawCases.AppServices
 
             if (entity == null)
             {
-                throw new EntityNotFoundException("error");
+                throw new EntityNotFoundException("Lawyer Not Found");
             }
 
             return ObjectMapper.Map<Lawyer, LawyerDto>(entity);
         }
 
-        public Task<PagedResultDto<LawyerDto>> GetListAsync(PagedAndSortedResultRequestDto input)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<LawyerDto> UpdateAsync(Guid id, CreateUpdateLawyerDto input)
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task<LawyerDto> UpdateLawyerAsync(Guid id, CreateUpdateLawyerDto lawyerDto)
         {
-            var lawyerEntityId = await _lawyerRepo.GetAsync(id);
+            var lawyer = await _lawyerRepo.GetAsync(id);
 
-            if (lawyerEntityId == null)
+            if (lawyer == null)
             {
                 throw new EntityNotFoundException("This Lawyer Not Found");
             }
 
-            ObjectMapper.Map(lawyerDto, lawyerEntityId);
+            // تحقق من الـ ConcurrencyStamp
+            if (string.IsNullOrWhiteSpace(lawyerDto.ConcurrencyStamp) || lawyerDto.ConcurrencyStamp != lawyer.ConcurrencyStamp)
+            {
+                throw new AbpDbConcurrencyException("The record has been modified by someone else.");
+            }
 
-            await _lawyerRepo.UpdateAsync(lawyerEntityId, autoSave: true);
+            if (lawyerDto.Name != null)
+                lawyer.Name = lawyerDto.Name;
 
-            return ObjectMapper.Map<Lawyer, LawyerDto>(lawyerEntityId);
+            if (lawyerDto.Email != null)
+                lawyer.Email = lawyerDto.Email;
 
+            if (lawyerDto.Phone != null)
+                lawyer.Phone = lawyerDto.Phone;
+
+            if (lawyerDto.Address != null)
+                lawyer.Address = lawyerDto.Address;
+
+            if (lawyerDto.Speciality != null)
+                lawyer.Speciality = lawyerDto.Speciality;
+
+            await _lawyerRepo.UpdateAsync(lawyer, autoSave: true);
+
+            return ObjectMapper.Map<Lawyer, LawyerDto>(lawyer);
         }
-
 
     }
 }
