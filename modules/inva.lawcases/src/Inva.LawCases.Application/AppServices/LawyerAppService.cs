@@ -72,10 +72,6 @@ namespace Inva.LawCases.AppServices
             return ObjectMapper.Map<List<Lawyer>, List<LawyerDto>>(lawyersList);
         }
 
-        public Task<LawyerDto> GetAsync(Guid id)
-        {
-            throw new NotImplementedException();
-        }
 
         public async Task<LawyerDto> GetLawyerByIdAsync(Guid lawyerGuid)
         {
@@ -91,30 +87,21 @@ namespace Inva.LawCases.AppServices
             return ObjectMapper.Map<Lawyer, LawyerDto>(entity);
         }
 
-        public Task<PagedResultDto<LawyerDto>> GetListAsync(PagedAndSortedResultRequestDto input)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<LawyerDto> UpdateAsync(Guid id, CreateUpdateLawyerDto input)
-        {
-            throw new NotImplementedException();
-        }
-
+   
         public async Task<LawyerDto> UpdateLawyerAsync(Guid id, CreateUpdateLawyerDto lawyerDto)
         {
-            var lawyerEntityId = await _lawyerRepo.GetAsync(id);
+            var lawyer = await _lawyerRepo.GetAsync(id);
 
-            if (lawyerEntityId == null)
+            if (lawyer == null)
             {
                 throw new EntityNotFoundException("This Lawyer Not Found");
             }
 
-            ObjectMapper.Map(lawyerDto, lawyerEntityId);
+            lawyer.Name = lawyerDto.Name;
 
-            await _lawyerRepo.UpdateAsync(lawyerEntityId, autoSave: true);
+            await _lawyerRepo.UpdateAsync(lawyer, autoSave: true);
 
-            return ObjectMapper.Map<Lawyer, LawyerDto>(lawyerEntityId);
+            return ObjectMapper.Map<Lawyer, LawyerDto>(lawyer);
 
         }
 
