@@ -81,7 +81,7 @@ namespace Inva.LawCases.AppServices
                 throw new EntityNotFoundException("This Hearing Not Found");
             }
 
-            if (!string.IsNullOrWhiteSpace(hearingDto.ConcurrencyStamp) && hearingDto.ConcurrencyStamp != hearing.ConcurrencyStamp)
+            if (string.IsNullOrWhiteSpace(hearingDto.ConcurrencyStamp) || hearingDto.ConcurrencyStamp != hearing.ConcurrencyStamp)
             {
                 throw new AbpDbConcurrencyException("The record has been modified by someone else.");
             }

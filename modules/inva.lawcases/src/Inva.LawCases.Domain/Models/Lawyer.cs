@@ -11,7 +11,6 @@ using Volo.Abp.MultiTenancy;
 namespace Inva.LawCases.Models
 {
     public class Lawyer : AuditedAggregateRoot<Guid>, IMultiTenant, ISoftDelete, IHasConcurrencyStamp
-
     {
 
         public string Name { get; set; }
@@ -19,7 +18,6 @@ namespace Inva.LawCases.Models
         public string Phone { get; set; }
         public string Address { get; set; }
         public string Speciality { get; set; }
-
 
         public Case? Case { get; set; }
 

@@ -97,7 +97,7 @@ namespace Inva.LawCases.AppServices
                 throw new EntityNotFoundException("This Lawyer Not Found");
             }
 
-            if (!string.IsNullOrWhiteSpace(caseDto.ConcurrencyStamp) && caseDto.ConcurrencyStamp != cases.ConcurrencyStamp)
+            if (string.IsNullOrWhiteSpace(caseDto.ConcurrencyStamp) || caseDto.ConcurrencyStamp != cases.ConcurrencyStamp)
             {
                 throw new AbpDbConcurrencyException("The record has been modified by someone else.");
             }

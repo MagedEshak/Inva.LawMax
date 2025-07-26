@@ -95,7 +95,6 @@ namespace Inva.LawCases.AppServices
             return ObjectMapper.Map<Lawyer, LawyerDto>(entity);
         }
 
-
         public async Task<LawyerDto> UpdateLawyerAsync(Guid id, CreateUpdateLawyerDto lawyerDto)
         {
             var lawyer = await _lawyerRepo.GetAsync(id);
@@ -106,7 +105,7 @@ namespace Inva.LawCases.AppServices
             }
 
             // تحقق من الـ ConcurrencyStamp
-            if (!string.IsNullOrWhiteSpace(lawyerDto.ConcurrencyStamp) && lawyerDto.ConcurrencyStamp != lawyer.ConcurrencyStamp)
+            if (string.IsNullOrWhiteSpace(lawyerDto.ConcurrencyStamp) || lawyerDto.ConcurrencyStamp != lawyer.ConcurrencyStamp)
             {
                 throw new AbpDbConcurrencyException("The record has been modified by someone else.");
             }

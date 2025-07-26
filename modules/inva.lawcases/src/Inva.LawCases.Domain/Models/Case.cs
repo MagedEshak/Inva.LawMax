@@ -21,6 +21,7 @@ namespace Inva.LawCases.Models
 
         public Guid? LawyerId { get; set; }
         public Guid? HearingId { get; set; }
+
         public Guid? TenantId { get; set; }
 
 

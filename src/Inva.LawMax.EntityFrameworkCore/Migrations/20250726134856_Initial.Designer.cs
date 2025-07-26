@@ -13,7 +13,7 @@ using Volo.Abp.EntityFrameworkCore;
 namespace Inva.LawMax.Migrations
 {
     [DbContext(typeof(LawMaxDbContext))]
-    [Migration("20250726132408_Initial")]
+    [Migration("20250726134856_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
