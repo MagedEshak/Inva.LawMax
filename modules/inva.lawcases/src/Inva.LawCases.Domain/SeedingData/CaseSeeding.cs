@@ -21,23 +21,31 @@ namespace Inva.LawCases._ٍSeedingData
             _caseRepo = caseRepo;
         }
 
+
         public async Task SeedAsync(DataSeedContext context)
         {
-
             if (await _caseRepo.GetCountAsync() > 0)
                 return;
 
-            var cases = new List<Case>
+            var case1 = new Case
             {
-                new Case
-                {
-                  Title = "Financial Compensation Case",
-                  Description = "A case regarding monetary compensation for damages.",
-                  Status = Status.Open, // غيّر حسب enum عندك
-                }
+                Title = "Case of Theft",
+                Description = "A suspected theft in the city center.",
+                Status = Status.Open,
+                TenantId = context.TenantId,
+                ConcurrencyStamp = Guid.NewGuid().ToString()
             };
 
-            await _caseRepo.InsertManyAsync(cases, autoSave: true);
+            var case2 = new Case
+            {
+                Title = "Land Dispute",
+                Description = "Dispute over land ownership in village.",
+                Status = Status.New,
+                TenantId = context.TenantId,
+                ConcurrencyStamp = Guid.NewGuid().ToString()
+            };
+
+            await _caseRepo.InsertManyAsync(new[] { case1, case2 }, autoSave: true);
         }
     }
 }

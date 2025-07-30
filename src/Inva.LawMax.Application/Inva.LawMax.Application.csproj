@@ -10,7 +10,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\modules\inva.lawcases\src\Inva.LawCases.Application\Inva.LawCases.Application.csproj" />
-    <ProjectReference Include="..\..\modules\inva.lawcases\src\Inva.LawCases.Domain\Inva.LawCases.Domain.csproj" />
     <ProjectReference Include="..\Inva.LawMax.Domain\Inva.LawMax.Domain.csproj" />
     <ProjectReference Include="..\Inva.LawMax.Application.Contracts\Inva.LawMax.Application.Contracts.csproj" />
   </ItemGroup>

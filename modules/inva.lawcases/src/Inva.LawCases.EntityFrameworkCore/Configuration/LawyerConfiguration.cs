@@ -18,9 +18,12 @@ namespace Inva.LawCases.Configuration
 
             // to set general value automatic
             builder.ConfigureByConvention();
-         
-            builder.Property(n=>n.Name).HasMaxLength(20);
-  
+
+            builder.HasOne(l => l.Case)
+               .WithOne(c => c.Lawyer)
+               .HasForeignKey<Lawyer>(l => l.CaseId)
+               .OnDelete(DeleteBehavior.Cascade);
+
         }
     }
 }

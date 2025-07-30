@@ -1,9 +1,12 @@
 ﻿using Inva.LawCases.Base;
 using Inva.LawCases.DTOs.Case;
 using Inva.LawCases.DTOs.Hearing;
+using Inva.LawCases.DTOs.Lawyer;
+using Inva.LawCases.HearingRepo;
 using Inva.LawCases.Interfaces;
 using Inva.LawCases.Models;
 using Inva.LawMax.DTOs.Lawyer;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,16 +22,17 @@ namespace Inva.LawCases.AppServices
 {
     public class HearingAppService : BaseApplicationService, IHearingAppService
     {
-        private readonly IRepository<Hearing, Guid> _hearingRepo;
+        private readonly IHearingRepository _hearingRepo;
 
-        public HearingAppService(IRepository<Hearing, Guid> hearingRepo)
+        public HearingAppService(IHearingRepository hearingRepo)
         {
             _hearingRepo = hearingRepo;
         }
 
-        public async Task<PagedResultDto<HearingDto>> GetListAsync(PagedAndSortedResultRequestDto input)
+        public async Task<PagedResultDto<HearingWithNavigationPropertyDto>> GetListAsync(PagedAndSortedResultRequestDto input)
         {
             var query = await _hearingRepo.GetQueryableAsync();
+            query = query.Include(x => x.Case).ThenInclude(h => h.Lawyer);
 
             // تطبيق الترتيب (لو فيه)
             query = query.OrderBy(input.Sorting ?? "Location");
@@ -37,30 +41,34 @@ namespace Inva.LawCases.AppServices
             var totalCount = await AsyncExecuter.CountAsync(query);
 
             // Apply Pagination
-            var items = await AsyncExecuter.ToListAsync(
-                query.Skip(input.SkipCount).Take(input.MaxResultCount)
-            );
+            var items = await query.Skip(input.SkipCount).Take(input.MaxResultCount).ToListAsync();
 
-            // تحويل للـ DTO
-            var hearingDtos = ObjectMapper.Map<List<Hearing>, List<HearingDto>>(items);
+            var result = items.Select(Hearings => new HearingWithNavigationPropertyDto
+            {
+                Hearing = ObjectMapper.Map<Hearing, HearingDto>(Hearings),
+                Case = Hearings.Case != null ? ObjectMapper.Map<Case, CaseDto>(Hearings.Case) : null
+            }).ToList();
 
-            return new PagedResultDto<HearingDto>(totalCount, hearingDtos);
+            return new PagedResultDto<HearingWithNavigationPropertyDto>(totalCount, result);
         }
 
 
 
-        public async Task<HearingDto> GetHearingByIdAsync(Guid hearing)
+        public async Task<HearingWithNavigationPropertyDto> GetHearingByIdAsync(Guid id)
         {
-            var hearingEntity = await _hearingRepo.WithDetailsAsync(h => h.Id);
-            var entity = hearingEntity.FirstOrDefault(h => h.Id == hearing);
+            var hearing = await _hearingRepo.GetHearingWithCase(id);
 
-            if (entity == null)
+            if (hearing == null)
             {
 
                 throw new EntityNotFoundException("Hearing Not Found");
             }
 
-            return ObjectMapper.Map<Hearing, HearingDto>(entity);
+            return new HearingWithNavigationPropertyDto
+            {
+                Hearing = ObjectMapper.Map<Hearing, HearingDto>(hearing),
+                Case = ObjectMapper.Map<Case, CaseDto>(hearing.Case)
+            };
         }
 
         public async Task<HearingDto> CreateHearingAsync(CreateUpdateHearingDto hearing)
@@ -92,6 +100,8 @@ namespace Inva.LawCases.AppServices
             if (hearingDto.Location != null)
                 hearing.Location = hearingDto.Location;
 
+            if (hearingDto.CaseId != null)
+                hearing.CaseId = hearingDto.CaseId;
 
             await _hearingRepo.UpdateAsync(hearing, autoSave: true);
 

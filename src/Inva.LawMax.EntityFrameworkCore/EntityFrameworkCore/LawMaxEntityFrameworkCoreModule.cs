@@ -1,20 +1,24 @@
-using System;
+using Inva.LawCases;
+using Inva.LawCases.CaseRepo;
+using Inva.LawCases.EntityFrameworkCore;
+using Inva.LawCases.HearingRepo;
+using Inva.LawCases.LawyerRepo.IlawyerReepository;
 using Microsoft.Extensions.DependencyInjection;
-using Volo.Abp.Uow;
+using System;
 using Volo.Abp.AuditLogging.EntityFrameworkCore;
 using Volo.Abp.BackgroundJobs.EntityFrameworkCore;
+using Volo.Abp.BlobStoring.Database.EntityFrameworkCore;
 using Volo.Abp.EntityFrameworkCore;
 using Volo.Abp.EntityFrameworkCore.SqlServer;
 using Volo.Abp.FeatureManagement.EntityFrameworkCore;
 using Volo.Abp.Identity.EntityFrameworkCore;
-using Volo.Abp.OpenIddict.EntityFrameworkCore;
 using Volo.Abp.Modularity;
+using Volo.Abp.OpenIddict.EntityFrameworkCore;
 using Volo.Abp.PermissionManagement.EntityFrameworkCore;
 using Volo.Abp.SettingManagement.EntityFrameworkCore;
-using Volo.Abp.BlobStoring.Database.EntityFrameworkCore;
-using Volo.Abp.TenantManagement.EntityFrameworkCore;
 using Volo.Abp.Studio;
-using Inva.LawCases;
+using Volo.Abp.TenantManagement.EntityFrameworkCore;
+using Volo.Abp.Uow;
 
 namespace Inva.LawMax.EntityFrameworkCore;
 
@@ -30,8 +34,9 @@ namespace Inva.LawMax.EntityFrameworkCore;
     typeof(AbpOpenIddictEntityFrameworkCoreModule),
     typeof(AbpTenantManagementEntityFrameworkCoreModule),
     typeof(BlobStoringDatabaseEntityFrameworkCoreModule),
-    typeof(LawCasesHttpApiClientModule)
+    typeof(LawCasesEntityFrameworkCoreModule)
     )]
+//[DependsOn(typeof(LawCasesEntityFrameworkCoreModule))] 
 public class LawMaxEntityFrameworkCoreModule : AbpModule
 {
     public override void PreConfigureServices(ServiceConfigurationContext context)
@@ -47,6 +52,7 @@ public class LawMaxEntityFrameworkCoreModule : AbpModule
                 /* Remove "includeAllEntities: true" to create
                  * default repositories only for aggregate roots */
             options.AddDefaultRepositories(includeAllEntities: true);
+           
         });
 
         if (AbpStudioAnalyzeHelper.IsInAnalyzeMode)
@@ -62,6 +68,9 @@ public class LawMaxEntityFrameworkCoreModule : AbpModule
             options.UseSqlServer();
 
         });
-        
+        // áæ ãÔ ÚÇãá auto-register:
+        context.Services.AddTransient<ILawyerRepository, LawyerRepositpry>();
+        context.Services.AddTransient<IHearingRepository, HearingRepository>();
+        context.Services.AddTransient<ICaseRepository, CaseRepository>();
     }
 }

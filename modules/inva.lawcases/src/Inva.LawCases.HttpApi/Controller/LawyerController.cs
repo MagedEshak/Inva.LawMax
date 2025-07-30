@@ -1,4 +1,5 @@
-﻿using Inva.LawCases.Interfaces;
+﻿using Inva.LawCases.DTOs.Lawyer;
+using Inva.LawCases.Interfaces;
 using Inva.LawMax.DTOs.Lawyer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -27,14 +28,14 @@ namespace Inva.LawCases.Controller
         }
 
         [HttpGet("{id}")]
-        public async Task<LawyerDto> GetAsync(Guid id)
+        public async Task<LawyerWithNavigationPropertyDto> GetAsync(Guid id)
         {
             return await _lawyerAppService.GetLawyerByIdAsync(id);
         }
 
 
         [HttpGet("all")]
-        public async Task<PagedResultDto<LawyerDto>> GetListAsync([FromQuery] PagedAndSortedResultRequestDto input)
+        public async Task<PagedResultDto<LawyerWithNavigationPropertyDto>> GetListAsync([FromQuery] PagedAndSortedResultRequestDto input)
         {
             return await _lawyerAppService.GetListAsync(input);
         }

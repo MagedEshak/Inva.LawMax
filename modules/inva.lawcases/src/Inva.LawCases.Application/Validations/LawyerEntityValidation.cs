@@ -37,6 +37,7 @@ namespace Inva.LawCases.Validations
                 .NotEmpty().WithMessage("Speciality is required.")
                 .MaximumLength(100).WithMessage("Speciality must be at most 100 characters.")
                 .When(x => x.Speciality != null);
+
         }
     }
 }

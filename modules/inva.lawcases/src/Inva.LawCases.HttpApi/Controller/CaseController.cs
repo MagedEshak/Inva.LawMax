@@ -26,18 +26,29 @@ namespace Inva.LawCases.Controller
             _caseAppService = caseAppService;
         }
 
-        [HttpGet("all")]
-        public async Task<PagedResultDto<CaseDto>> GetListAsync([FromQuery] PagedAndSortedResultRequestDto input)
-        {
-            return await _caseAppService.GetListAsync(input);
-        }
 
-        [HttpGet("{caseGuid}")]
-        public async Task<CaseDto> GetCaseByIdAsync(Guid caseGuid)
-        {
-            return await _caseAppService.GetCaseByIdAsync(caseGuid);
-        }
+        //public async Task<PagedResultDto<CaseDto>> GetListAsync([FromQuery] PagedAndSortedResultRequestDto input)
+        //{
+        //    return await _caseAppService.GetListAsync(input);
+        //}
 
+
+        //public async Task<CaseDto> GetCaseByIdAsync(Guid caseGuid)
+        //{
+        //    return await _caseAppService.GetCaseByIdAsync(caseGuid);
+        //}
+        [HttpGet("GetCaseWithLawyers")]
+        public async Task<PagedResultDto<CaseLawyerHearingsWithNavigationProperty>> GetCaseWithLawyersAndHearingsListAsync([FromQuery] PagedAndSortedResultRequestDto input)
+        {
+            return await _caseAppService.GetCaseWithLawyersAndHearingsListAsync(input);
+        }
+     
+        [HttpGet("CaseWithLawyersAndHearings/{caseGuid}")]
+        public async Task<CaseLawyerHearingsWithNavigationProperty> GetCaseWithLawyersAndHearingsByIdAsync(Guid caseGuid)
+        {
+            return await _caseAppService.GetCaseWithLawyersAndHearingsByIdAsync(caseGuid);
+        }
+        
         [HttpPost]
         public async Task<CaseDto> CreateCaseAsync([FromBody] CreateUpdateCaseDto caseDto)
         {
@@ -57,7 +68,5 @@ namespace Inva.LawCases.Controller
         }
 
        
-
-        
     }
 }

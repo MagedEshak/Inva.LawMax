@@ -15,9 +15,7 @@ namespace Inva.LawMax.DTOs.Lawyer
         public string? Phone { get; set; }
         public string? Address { get; set; }
         public string? Speciality { get; set; }
-
         public Guid? CaseId { get; set; }
-
         public string? ConcurrencyStamp { get; set; }
     }
 }

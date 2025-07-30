@@ -35,6 +35,7 @@ using Volo.Abp.OpenIddict;
 using Volo.Abp.Swashbuckle;
 using Volo.Abp.Studio.Client.AspNetCore;
 using Volo.Abp.Security.Claims;
+using Inva.LawCases;
 
 namespace Inva.LawMax;
 
@@ -50,6 +51,7 @@ namespace Inva.LawMax;
     typeof(AbpSwashbuckleModule),
     typeof(AbpAspNetCoreSerilogModule)
     )]
+[DependsOn(typeof(LawCasesHttpApiModule))] 
 public class LawMaxHttpApiHostModule : AbpModule
 {
     public override void PreConfigureServices(ServiceConfigurationContext context)

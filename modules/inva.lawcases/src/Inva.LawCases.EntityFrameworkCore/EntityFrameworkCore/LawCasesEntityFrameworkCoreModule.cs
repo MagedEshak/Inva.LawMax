@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Inva.LawCases.Models;
+using Microsoft.Extensions.DependencyInjection;
 using Volo.Abp.EntityFrameworkCore;
 using Volo.Abp.Modularity;
 
@@ -15,10 +16,10 @@ public class LawCasesEntityFrameworkCoreModule : AbpModule
         context.Services.AddAbpDbContext<LawCasesDbContext>(options =>
         {
             options.AddDefaultRepositories<ILawCasesDbContext>(includeAllEntities: true);
-            
-            /* Add custom repositories here. Example:
-            * options.AddRepository<Question, EfCoreQuestionRepository>();
-            */
+
+            options.AddRepository<Lawyer, LawyerRepositpry>();
+            options.AddRepository<Hearing, HearingRepository>();
+            options.AddRepository<Case, CaseRepository>();
         });
     }
 }

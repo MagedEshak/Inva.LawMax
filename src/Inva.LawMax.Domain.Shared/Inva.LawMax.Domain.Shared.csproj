@@ -36,7 +36,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\modules\inva.lawcases\src\Inva.LawCases.Domain.Shared\Inva.LawCases.Domain.Shared.csproj" />
-    <ProjectReference Include="..\..\modules\inva.lawcases\src\Inva.LawCases.Domain\Inva.LawCases.Domain.csproj" />
   </ItemGroup>
 
 </Project>
