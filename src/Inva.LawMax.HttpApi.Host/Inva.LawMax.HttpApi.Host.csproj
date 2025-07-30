@@ -37,9 +37,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\modules\inva.lawcases\src\Inva.LawCases.Application\Inva.LawCases.Application.csproj" />
-    <ProjectReference Include="..\..\modules\inva.lawcases\src\Inva.LawCases.EntityFrameworkCore\Inva.LawCases.EntityFrameworkCore.csproj" />
-    <ProjectReference Include="..\..\modules\inva.lawcases\src\Inva.LawCases.HttpApi\Inva.LawCases.HttpApi.csproj" />
     <ProjectReference Include="..\Inva.LawMax.Application\Inva.LawMax.Application.csproj" />
     <ProjectReference Include="..\Inva.LawMax.HttpApi\Inva.LawMax.HttpApi.csproj" />
     <ProjectReference Include="..\Inva.LawMax.EntityFrameworkCore\Inva.LawMax.EntityFrameworkCore.csproj" />

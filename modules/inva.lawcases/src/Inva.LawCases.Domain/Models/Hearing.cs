@@ -17,6 +17,7 @@ namespace Inva.LawCases.Models
 
         public Guid? TenantId { get; set; }
 
+        public Guid? CaseId { get; set; }
         public Case? Case { get; set; }
 
         public bool IsDeleted { get; set; }

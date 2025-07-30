@@ -18,8 +18,11 @@ namespace Inva.LawCases.Configuration
 
             // to set general value automatic
             builder.ConfigureByConvention();
+            builder.HasOne(l => l.Case)
+                .WithOne(c => c.Hearing)
+                .HasForeignKey<Hearing>(l => l.CaseId)
+                .OnDelete(DeleteBehavior.Cascade);
 
-        
         }
     }
 }

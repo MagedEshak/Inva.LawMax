@@ -1,5 +1,10 @@
 ﻿
+using Inva.LawCases.DTOs.Case;
+using Inva.LawCases.DTOs.Hearing;
+using Inva.LawCases.DTOs.Lawyer;
 using Inva.LawCases.Interfaces;
+using Inva.LawCases.LawyerRepo;
+using Inva.LawCases.LawyerRepo.IlawyerReepository;
 using Inva.LawCases.Models;
 using Inva.LawMax.DTOs.Lawyer;
 using Microsoft.EntityFrameworkCore;
@@ -14,15 +19,16 @@ using Volo.Abp.Application.Services;
 using Volo.Abp.Data;
 using Volo.Abp.Domain.Entities;
 using Volo.Abp.Domain.Repositories;
+using Volo.Abp.ObjectMapping;
 
 
 namespace Inva.LawCases.AppServices
 {
     public class LawyerAppService : ApplicationService, ILawyerAppService
     {
-        private readonly IRepository<Lawyer, Guid> _lawyerRepo;
+        private readonly ILawyerRepository _lawyerRepo;
 
-        public LawyerAppService(IRepository<Lawyer, Guid> lawyerRepo)
+        public LawyerAppService(ILawyerRepository lawyerRepo)
         {
             _lawyerRepo = lawyerRepo;
         }
@@ -31,7 +37,7 @@ namespace Inva.LawCases.AppServices
         {
             try
             {
-                var lawyerEntity = ObjectMapper.Map<CreateUpdateLawyerDto, Lawyer>(lawyerDto);
+                var lawyerEntity = ObjectMapper.Map<CreateUpdateLawyerDto, Models.Lawyer>(lawyerDto);
 
                 var insertedLawyer = await _lawyerRepo.InsertAsync(lawyerEntity, autoSave: true);
 
@@ -58,41 +64,48 @@ namespace Inva.LawCases.AppServices
         }
 
 
-        public async Task<PagedResultDto<LawyerDto>> GetListAsync(PagedAndSortedResultRequestDto input)
+        public async Task<PagedResultDto<LawyerWithNavigationPropertyDto>> GetListAsync(PagedAndSortedResultRequestDto input)
         {
             var query = await _lawyerRepo.GetQueryableAsync();
+            query = query.Include(c => c.Case).ThenInclude(h=>h.Hearing);
 
-
-            // تطبيق الترتيب (لو فيه)
             query = query.OrderBy(input.Sorting ?? "Name");
 
             // إجمالي العناصر قبل التصفية
             var totalCount = await AsyncExecuter.CountAsync(query);
 
             // Apply Pagination
-            var items = await AsyncExecuter.ToListAsync(
-                query.Skip(input.SkipCount).Take(input.MaxResultCount)
-            );
+            //var items = await _lawyerRepo.GetPagedListAsync(input.SkipCount, input.MaxResultCount, input.Sorting, true);
 
-            // تحويل للـ DTO
-            var lawyerDtos = ObjectMapper.Map<List<Lawyer>, List<LawyerDto>>(items);
+            var items = await query.Skip(input.SkipCount)
+                       .Take(input.MaxResultCount)
+                       .ToListAsync();
 
-            return new PagedResultDto<LawyerDto>(totalCount, lawyerDtos);
+
+            var result = items.Select(lawyer => new LawyerWithNavigationPropertyDto
+            {
+                Lawyer = ObjectMapper.Map<Lawyer, LawyerDto>(lawyer),
+                Case = lawyer.Case != null ? ObjectMapper.Map<Case, CaseDto>(lawyer.Case) : null
+            }).ToList();
+
+            return new PagedResultDto<LawyerWithNavigationPropertyDto>(totalCount, result);
         }
 
 
-        public async Task<LawyerDto> GetLawyerByIdAsync(Guid lawyerGuid)
+        public async Task<LawyerWithNavigationPropertyDto> GetLawyerByIdAsync(Guid ID)
         {
-            var lawyerEntity = await _lawyerRepo.WithDetailsAsync(l => l.Case);
+            var lawyer = await _lawyerRepo.GetLawyerWithCase(ID);
 
-            var entity = await lawyerEntity.Where(l => l.Id == lawyerGuid).FirstOrDefaultAsync();
 
-            if (entity == null)
+            if (lawyer == null)
             {
                 throw new EntityNotFoundException("Lawyer Not Found");
             }
-
-            return ObjectMapper.Map<Lawyer, LawyerDto>(entity);
+            return new LawyerWithNavigationPropertyDto
+            {
+                Lawyer = ObjectMapper.Map<Lawyer, LawyerDto>(lawyer),
+                Case = ObjectMapper.Map<Case, CaseDto>(lawyer.Case)
+            };
         }
 
         public async Task<LawyerDto> UpdateLawyerAsync(Guid id, CreateUpdateLawyerDto lawyerDto)
@@ -124,6 +137,10 @@ namespace Inva.LawCases.AppServices
 
             if (lawyerDto.Speciality != null)
                 lawyer.Speciality = lawyerDto.Speciality;
+
+            if (lawyerDto.CaseId != null)
+                lawyer.CaseId = lawyerDto.CaseId;
+
 
             await _lawyerRepo.UpdateAsync(lawyer, autoSave: true);
 

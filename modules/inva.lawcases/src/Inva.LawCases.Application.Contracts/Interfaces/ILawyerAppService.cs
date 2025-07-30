@@ -1,4 +1,5 @@
 ﻿
+using Inva.LawCases.DTOs.Lawyer;
 using Inva.LawMax.DTOs.Lawyer;
 using System;
 using System.Collections.Generic;
@@ -14,8 +15,8 @@ namespace Inva.LawCases.Interfaces
     {
         Task<LawyerDto> CreateLawyerAsync(CreateUpdateLawyerDto LawyerDto);
         Task<LawyerDto> UpdateLawyerAsync(Guid id, CreateUpdateLawyerDto LawyerDto);
-        Task<PagedResultDto<LawyerDto>> GetListAsync(PagedAndSortedResultRequestDto input);
-        Task<LawyerDto> GetLawyerByIdAsync(Guid LawyerGuid);
+        Task<PagedResultDto<LawyerWithNavigationPropertyDto>> GetListAsync(PagedAndSortedResultRequestDto input);
+        Task<LawyerWithNavigationPropertyDto> GetLawyerByIdAsync(Guid LawyerGuid);
         Task<bool> DeleteLawyerAsync(Guid LawyerGuid);
     }
 }

@@ -11,6 +11,7 @@
 
   <ItemGroup>
     <PackageReference Include="Volo.Abp.Ddd.Domain" Version="9.2.2" />
+    <ProjectReference Include="..\Inva.LawCases.Application.Contracts\Inva.LawCases.Application.Contracts.csproj" />
     <ProjectReference Include="..\Inva.LawCases.Domain.Shared\Inva.LawCases.Domain.Shared.csproj" />
   </ItemGroup>
 

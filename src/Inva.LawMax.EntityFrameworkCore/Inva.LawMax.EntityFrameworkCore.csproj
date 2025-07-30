@@ -9,9 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\modules\inva.lawcases\src\Inva.LawCases.Domain\Inva.LawCases.Domain.csproj" />
     <ProjectReference Include="..\..\modules\inva.lawcases\src\Inva.LawCases.EntityFrameworkCore\Inva.LawCases.EntityFrameworkCore.csproj" />
-    <ProjectReference Include="..\..\modules\inva.lawcases\src\Inva.LawCases.HttpApi.Client\Inva.LawCases.HttpApi.Client.csproj" />
     <ProjectReference Include="..\Inva.LawMax.Domain\Inva.LawMax.Domain.csproj" />
   </ItemGroup>
 

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Inva.LawCases.DTOs.Hearing;
+using Inva.LawCases.DTOs.Lawyer;
 using Inva.LawCases.Models;
 using Inva.LawMax.DTOs.Lawyer;
 using System;
@@ -15,7 +16,9 @@ namespace Inva.LawCases.Mapping
     {
         public LawyerMapping()
         {
-            CreateMap<Lawyer, LawyerDto>();
+            CreateMap<Lawyer, LawyerDto>()
+             .ForMember(dest => dest.CaseId, opt => opt.MapFrom(src => src.CaseId));
+
             CreateMap<CreateUpdateLawyerDto, Lawyer>()
                 .ForMember(dest => dest.Case, opt => opt.Ignore())
                .ForMember(dest => dest.TenantId, opt => opt.Ignore())
@@ -23,7 +26,7 @@ namespace Inva.LawCases.Mapping
                .ForMember(dest => dest.Id, opt => opt.Ignore())
                .ForMember(dest => dest.ExtraProperties, opt => opt.Ignore())
                 .IgnoreCreationAuditedObjectProperties().IgnoreAuditedObjectProperties();
-               
+
         }
     }
 }

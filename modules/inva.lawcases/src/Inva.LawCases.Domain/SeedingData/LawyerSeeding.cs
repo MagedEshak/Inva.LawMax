@@ -8,7 +8,7 @@ using Volo.Abp.Data;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.Domain.Repositories;
 
-namespace Inva.LawCases._ٍSeedingData
+namespace Inva.LawCases.SeedingData
 {
     public class LawyerSeeding : IDataSeedContributor, ITransientDependency
     {
@@ -20,45 +20,40 @@ namespace Inva.LawCases._ٍSeedingData
             _lawyerRepo = lawyerRepo;
             _caseRepo = caseRepo;
         }
-
         public async Task SeedAsync(DataSeedContext context)
         {
-
-            var existingCase = await _caseRepo.FirstOrDefaultAsync();
-            if (existingCase == null)
-            {
-                return;
-            }
-
-            // Check if already seeded
             if (await _lawyerRepo.GetCountAsync() > 0)
-            {
                 return;
-            }
 
-            var lawyers = new List<Lawyer>
+            // جلب أول قضية موجودة من جدول القضايا (لو عايز تربط محامي بقضية)
+            var firstCase = await _caseRepo.FirstOrDefaultAsync();
+
+            var lawyer1 = new Lawyer
             {
-                new()
-                {
-                    Name = "Mona Abdallah",
-                    Speciality = "Defense Lawyer",
-                    Phone = "01098765432",
-                    Address = "Tanta",
-                    Email = "Mona@gmail.com"
-
-                },
-                new()
-                {
-                    Name = "Samuel Ashraf",
-                    Speciality = "Defense Lawyer",
-                    Phone = "01098765555",
-                    Address = "Minya",
-                    Email = "samuel@gmail.com"
-                }
-                // Add more lawyers if needed
+                Name = "Samuel Ashraf",
+                Email = "samuel@gmail.com",
+                Phone = "01098765555",
+                Address = "Minya",
+                Speciality = "Defense Lawyer",
+                CaseId = firstCase?.Id, // ممكن تبقى null
+                TenantId = context.TenantId,
+                ConcurrencyStamp = Guid.NewGuid().ToString()
             };
 
-            await _lawyerRepo.InsertManyAsync(lawyers, autoSave: true);
+            var lawyer2 = new Lawyer
+            {
+                Name = "Mona Abdallah",
+                Email = "Mona@gmail.com",
+                Phone = "01098765432",
+                Address = "Tanta",
+                Speciality = "Defense Lawyer",
+                CaseId = null, // intentionally left null
+                TenantId = context.TenantId,
+                ConcurrencyStamp = Guid.NewGuid().ToString()
+            };
+
+            await _lawyerRepo.InsertManyAsync(new[] { lawyer1, lawyer2 }, autoSave: true);
         }
+
     }
 }

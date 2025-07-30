@@ -18,10 +18,6 @@ namespace Inva.LawCases.Models
         public string? Description { get; set; }
         public Status Status { get; set; }
 
-
-        public Guid? LawyerId { get; set; }
-        public Guid? HearingId { get; set; }
-
         public Guid? TenantId { get; set; }
 
 

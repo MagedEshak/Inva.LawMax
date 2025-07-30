@@ -26,14 +26,14 @@ namespace Inva.LawCases.Controller
         }
 
         [HttpGet("all")]
-        public async Task<PagedResultDto<HearingDto>> GetListAsync([FromQuery] PagedAndSortedResultRequestDto input)
+        public async Task<PagedResultDto<HearingWithNavigationPropertyDto>> GetListAsync([FromQuery] PagedAndSortedResultRequestDto input)
         {
             return await _hearingAppService.GetListAsync(input);
         }
 
 
         [HttpGet("{hearingGuid}")]
-        public async Task<HearingDto> GetHearingByIdAsync(Guid hearingGuid)
+        public async Task<HearingWithNavigationPropertyDto> GetHearingByIdAsync(Guid hearingGuid)
         {
             return await _hearingAppService.GetHearingByIdAsync(hearingGuid);
         }

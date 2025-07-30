@@ -1,3 +1,4 @@
+using Inva.LawCases.EntityFrameworkCore;
 using Inva.LawCases.Models;
 using Inva.LawMax.Books;
 using Microsoft.EntityFrameworkCore;
@@ -85,6 +86,7 @@ public class LawMaxDbContext :
         builder.ConfigureOpenIddict();
         builder.ConfigureTenantManagement();
         builder.ConfigureBlobStoring();
+        builder.ConfigureLawCases();
         
         builder.Entity<Book>(b =>
         {
