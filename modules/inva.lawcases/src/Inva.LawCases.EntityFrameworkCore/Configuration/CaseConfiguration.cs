@@ -20,9 +20,10 @@ namespace Inva.LawCases.Configuration
             // to set general value automatic
             builder.ConfigureByConvention();
 
-         
-
-           
+            builder.HasOne(l => l.Lawyer)
+                 .WithMany(c => c.Cases)
+                 .HasForeignKey(l => l.LawyerId)
+                 .OnDelete(DeleteBehavior.Cascade); // عند حذف Lawyer، سيتم حذف كل القضايا المرتبطة
         }
     }
 }

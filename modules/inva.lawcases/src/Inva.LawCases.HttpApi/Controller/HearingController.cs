@@ -30,8 +30,6 @@ namespace Inva.LawCases.Controller
         {
             return await _hearingAppService.GetListAsync(input);
         }
-
-
         [HttpGet("{hearingGuid}")]
         public async Task<HearingWithNavigationPropertyDto> GetHearingByIdAsync(Guid hearingGuid)
         {
@@ -43,7 +41,7 @@ namespace Inva.LawCases.Controller
         {
             return await _hearingAppService.CreateHearingAsync(hearingDto);
         }
-       
+
         [HttpPatch("{id}")]
         public async Task<HearingDto> UpdateHearingAsync(Guid id, [FromBody] CreateUpdateHearingDto hearingDto)
         {
@@ -55,6 +53,6 @@ namespace Inva.LawCases.Controller
         {
             return await _hearingAppService.DeleteHearingAsync(hearingGuid);
         }
-      
+
     }
 }

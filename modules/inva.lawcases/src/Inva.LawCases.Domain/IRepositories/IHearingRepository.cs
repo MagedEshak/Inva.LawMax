@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Volo.Abp.Domain.Repositories;
 
-namespace Inva.LawCases.HearingRepo
+namespace Inva.LawCases.IRepositories
 {
     public interface IHearingRepository : IRepository<Hearing, Guid>
     {

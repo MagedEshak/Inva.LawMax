@@ -1,6 +1,5 @@
-﻿using Inva.LawCases.CaseRepo;
-using Inva.LawCases.EntityFrameworkCore;
-using Inva.LawCases.HearingRepo;
+﻿using Inva.LawCases.EntityFrameworkCore;
+using Inva.LawCases.IRepositories;
 using Inva.LawCases.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -11,7 +10,7 @@ using System.Threading.Tasks;
 using Volo.Abp.Domain.Repositories.EntityFrameworkCore;
 using Volo.Abp.EntityFrameworkCore;
 
-namespace Inva.LawCases
+namespace Inva.LawCases.Repositories
 {
     public class CaseRepository : EfCoreRepository<LawCasesDbContext, Case, Guid>, ICaseRepository
     {
@@ -22,13 +21,15 @@ namespace Inva.LawCases
         public async Task<Case> GetCaseWithHearing(Guid id)
         {
             var db = await GetDbContextAsync();
-            return db.Cases.Include(c => c.Hearing).FirstOrDefault(h => h.Id == id);
+            return db.Cases.Include(c => c.Hearings).FirstOrDefault(h => h.Id == id);
         }
 
         public async Task<Case> GetCaseWithLawyer(Guid id)
         {
             var db = await GetDbContextAsync();
-            return db.Cases.Include(c => c.Lawyer).FirstOrDefault(h => h.Id == id);
+            var cases = db.Cases.Include(c => c.Lawyer).FirstOrDefault(h => h.Id == id);
+            cases = db.Cases.Include(c => c.Hearings).FirstOrDefault(h => h.Id == id);
+            return cases;
         }
     }
 }

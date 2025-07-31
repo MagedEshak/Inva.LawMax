@@ -3,8 +3,7 @@ using Inva.LawCases.DTOs.Case;
 using Inva.LawCases.DTOs.Hearing;
 using Inva.LawCases.DTOs.Lawyer;
 using Inva.LawCases.Interfaces;
-using Inva.LawCases.LawyerRepo;
-using Inva.LawCases.LawyerRepo.IlawyerReepository;
+using Inva.LawCases.IRepositories;
 using Inva.LawCases.Models;
 using Inva.LawMax.DTOs.Lawyer;
 using Microsoft.EntityFrameworkCore;
@@ -67,7 +66,7 @@ namespace Inva.LawCases.AppServices
         public async Task<PagedResultDto<LawyerWithNavigationPropertyDto>> GetListAsync(PagedAndSortedResultRequestDto input)
         {
             var query = await _lawyerRepo.GetQueryableAsync();
-            query = query.Include(c => c.Case).ThenInclude(h=>h.Hearing);
+            query = query.Include(c => c.Cases).ThenInclude(h=>h.Hearings);
 
             query = query.OrderBy(input.Sorting ?? "Name");
 
@@ -75,8 +74,7 @@ namespace Inva.LawCases.AppServices
             var totalCount = await AsyncExecuter.CountAsync(query);
 
             // Apply Pagination
-            //var items = await _lawyerRepo.GetPagedListAsync(input.SkipCount, input.MaxResultCount, input.Sorting, true);
-
+           
             var items = await query.Skip(input.SkipCount)
                        .Take(input.MaxResultCount)
                        .ToListAsync();
@@ -85,8 +83,9 @@ namespace Inva.LawCases.AppServices
             var result = items.Select(lawyer => new LawyerWithNavigationPropertyDto
             {
                 Lawyer = ObjectMapper.Map<Lawyer, LawyerDto>(lawyer),
-                Case = lawyer.Case != null ? ObjectMapper.Map<Case, CaseDto>(lawyer.Case) : null
-            }).ToList();
+                Cases = lawyer.Cases != null ? 
+                ObjectMapper.Map<List<Case>, List<CaseDto>>(lawyer.Cases.ToList()) 
+                : new List<CaseDto>()}).ToList();
 
             return new PagedResultDto<LawyerWithNavigationPropertyDto>(totalCount, result);
         }
@@ -104,7 +103,9 @@ namespace Inva.LawCases.AppServices
             return new LawyerWithNavigationPropertyDto
             {
                 Lawyer = ObjectMapper.Map<Lawyer, LawyerDto>(lawyer),
-                Case = ObjectMapper.Map<Case, CaseDto>(lawyer.Case)
+                Cases = lawyer.Cases != null ?
+                ObjectMapper.Map<List<Case>, List<CaseDto>>(lawyer.Cases.ToList())
+                : new List<CaseDto>().ToList()
             };
         }
 
@@ -138,8 +139,12 @@ namespace Inva.LawCases.AppServices
             if (lawyerDto.Speciality != null)
                 lawyer.Speciality = lawyerDto.Speciality;
 
-            if (lawyerDto.CaseId != null)
-                lawyer.CaseId = lawyerDto.CaseId;
+            if (lawyerDto.Cases != null)
+            {
+                lawyer.Cases = lawyerDto.Cases
+                    .Select(dto => ObjectMapper.Map<CaseDto, Case>(dto))
+                    .ToList();
+            }
 
 
             await _lawyerRepo.UpdateAsync(lawyer, autoSave: true);

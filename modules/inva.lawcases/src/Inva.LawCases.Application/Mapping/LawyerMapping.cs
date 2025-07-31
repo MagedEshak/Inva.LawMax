@@ -17,10 +17,10 @@ namespace Inva.LawCases.Mapping
         public LawyerMapping()
         {
             CreateMap<Lawyer, LawyerDto>()
-             .ForMember(dest => dest.CaseId, opt => opt.MapFrom(src => src.CaseId));
+             .ForMember(dest => dest.Cases, opt => opt.MapFrom(src => src.Cases));
 
             CreateMap<CreateUpdateLawyerDto, Lawyer>()
-                .ForMember(dest => dest.Case, opt => opt.Ignore())
+                .ForMember(dest => dest.Cases, opt => opt.Ignore())
                .ForMember(dest => dest.TenantId, opt => opt.Ignore())
                .ForMember(dest => dest.IsDeleted, opt => opt.Ignore())
                .ForMember(dest => dest.Id, opt => opt.Ignore())

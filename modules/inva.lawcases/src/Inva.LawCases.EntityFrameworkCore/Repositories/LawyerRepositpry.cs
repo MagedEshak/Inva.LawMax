@@ -1,6 +1,5 @@
 ﻿using Inva.LawCases.EntityFrameworkCore;
-using Inva.LawCases.LawyerRepo;
-using Inva.LawCases.LawyerRepo.IlawyerReepository;
+using Inva.LawCases.IRepositories;
 using Inva.LawCases.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -10,7 +9,7 @@ using System.Threading.Tasks;
 using Volo.Abp.Domain.Repositories.EntityFrameworkCore;
 using Volo.Abp.EntityFrameworkCore;
 
-namespace Inva.LawCases
+namespace Inva.LawCases.Repositories
 {
     public class LawyerRepositpry : EfCoreRepository<LawCasesDbContext, Lawyer, Guid>, ILawyerRepository
     {
@@ -18,10 +17,11 @@ namespace Inva.LawCases
         {
         }
 
+
         public async Task<Lawyer> GetLawyerWithCase(Guid id)
         {
             var db = await GetDbContextAsync();
-            return db.Lawyers.Include(x => x.Case).FirstOrDefault(l => l.Id == id);
+            return db.Lawyers.Include(x => x.Cases).FirstOrDefault(l => l.Id == id);
 
         }
     }

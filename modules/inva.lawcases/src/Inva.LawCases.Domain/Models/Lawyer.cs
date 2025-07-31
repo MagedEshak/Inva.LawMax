@@ -13,20 +13,39 @@ namespace Inva.LawCases.Models
 {
     public class Lawyer : AuditedAggregateRoot<Guid>, IMultiTenant, ISoftDelete, IHasConcurrencyStamp
     {
-
         public string Name { get; set; }
         public string Email { get; set; }
         public string Phone { get; set; }
         public string Address { get; set; }
         public string Speciality { get; set; }
-
-        public Guid? CaseId { get; set; }
-        [ForeignKey("CaseId")]
-        public virtual Case? Case { get; set; }
-
         public Guid? TenantId { get; set; }
-
         public bool IsDeleted { get; set; }
         public string ConcurrencyStamp { get; set; }
+        public ICollection<Case> Cases { get; set; } = new List<Case>();
+
+        //Constructor
+        public Lawyer(string name,
+            string email, string phone,
+            string address,
+            string speciality,
+            Guid? tenantId,
+            bool isDeleted, string concurrencyStamp)
+        {
+            Name = name;
+            Email = email;
+            Phone = phone;
+            Address = address;
+            Speciality = speciality;
+            TenantId = tenantId;
+            IsDeleted = isDeleted;
+            ConcurrencyStamp = concurrencyStamp;
+            Cases = new List<Case>();
+        }
+
+        public Lawyer()
+        {
+            
+        }
+
     }
 }

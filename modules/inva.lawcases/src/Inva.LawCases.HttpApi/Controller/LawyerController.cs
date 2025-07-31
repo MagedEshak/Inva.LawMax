@@ -52,13 +52,6 @@ namespace Inva.LawCases.Controller
         {
             return await _lawyerAppService.UpdateLawyerAsync(id, input);
         }
-        //[HttpPatch("{id}")]
-        //public async Task<LawyerDto> UpdateAsync(Guid id, [FromBody] UpdateLawyerDto input)
-        //{
-        //    return await _lawyerAppService.UpdateLawyerAsync(id, input);
-        //}
-
-
         [HttpDelete("{id}")]
         public async Task DeleteAsync(Guid id)
         {

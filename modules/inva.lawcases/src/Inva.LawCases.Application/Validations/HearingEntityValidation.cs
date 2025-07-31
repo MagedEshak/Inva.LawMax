@@ -23,6 +23,11 @@ namespace Inva.LawCases.Validations
                 .MaximumLength(200).WithMessage("Location must be at most 200 characters.")
                 .When(d => d.Location != null);
 
+            RuleFor(x => x.Decision)
+                .NotEmpty().WithMessage("Location is required.")
+                .MaximumLength(200).WithMessage("Location must be at most 200 characters.")
+                .When(d => d.Decision != null);
+
 
         }
     }

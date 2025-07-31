@@ -14,11 +14,8 @@ namespace Inva.LawCases.Interfaces
     {
         Task<CaseDto> CreateCaseAsync(CreateUpdateCaseDto caseDto);
         Task<CaseDto> UpdateCaseAsync(Guid id,CreateUpdateCaseDto caseDto);
-        //Task<PagedResultDto<CaseDto>> GetListAsync(PagedAndSortedResultRequestDto input);
         Task<PagedResultDto<CaseLawyerHearingsWithNavigationProperty>> GetCaseWithLawyersAndHearingsListAsync(PagedAndSortedResultRequestDto input);
-      //  Task<PagedResultDto<CaseHearingWithNavigationProperty>> GetCaseWithHearingListAsync(PagedAndSortedResultRequestDto input);
         Task<CaseLawyerHearingsWithNavigationProperty> GetCaseWithLawyersAndHearingsByIdAsync(Guid caseGuid);
-       // Task<CaseHearingWithNavigationProperty> GetCaseHearingByIdAsync(Guid caseGuid);
         Task<bool> DeleteCaseAsync(Guid caseGuid);
     }
 }

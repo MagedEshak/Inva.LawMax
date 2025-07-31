@@ -2,8 +2,8 @@
 using Inva.LawCases.DTOs.Case;
 using Inva.LawCases.DTOs.Hearing;
 using Inva.LawCases.DTOs.Lawyer;
-using Inva.LawCases.HearingRepo;
 using Inva.LawCases.Interfaces;
+using Inva.LawCases.IRepositories;
 using Inva.LawCases.Models;
 using Inva.LawMax.DTOs.Lawyer;
 using Microsoft.EntityFrameworkCore;

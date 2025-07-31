@@ -14,14 +14,33 @@ namespace Inva.LawCases.Models
     {
         public DateTime Date { get; set; } = DateTime.Now;
         public string Location { get; set; }
-
-        public Guid? TenantId { get; set; }
-
+        public string Decision { get; set; }
         public Guid? CaseId { get; set; }
-        public Case? Case { get; set; }
-
+        public virtual Case? Case { get; set; }
+        public Guid? TenantId { get; set; }
         public bool IsDeleted { get; set; }
-
         public string ConcurrencyStamp { get; set; }
+
+        public Hearing(DateTime date,
+            string location, 
+            string decision, 
+            Guid? caseId, 
+            Guid? tenantId, 
+            bool isDeleted, 
+            string concurrencyStamp)
+        {
+            Date = date;
+            Location = location;
+            Decision = decision;
+            CaseId = caseId;
+            TenantId = tenantId;
+            IsDeleted = isDeleted;
+            ConcurrencyStamp = concurrencyStamp;
+        }
+
+        public Hearing()
+        {
+            
+        }
     }
 }

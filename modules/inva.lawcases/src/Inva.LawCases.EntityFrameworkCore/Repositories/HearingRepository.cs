@@ -1,5 +1,5 @@
 ﻿using Inva.LawCases.EntityFrameworkCore;
-using Inva.LawCases.HearingRepo;
+using Inva.LawCases.IRepositories;
 using Inva.LawCases.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 using Volo.Abp.Domain.Repositories.EntityFrameworkCore;
 using Volo.Abp.EntityFrameworkCore;
 
-namespace Inva.LawCases
+namespace Inva.LawCases.Repositories
 {
     public class HearingRepository : EfCoreRepository<LawCasesDbContext, Hearing, Guid>, IHearingRepository
     {

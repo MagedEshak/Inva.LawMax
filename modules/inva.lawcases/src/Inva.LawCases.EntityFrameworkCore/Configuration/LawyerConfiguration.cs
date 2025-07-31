@@ -19,11 +19,9 @@ namespace Inva.LawCases.Configuration
             // to set general value automatic
             builder.ConfigureByConvention();
 
-            builder.HasOne(l => l.Case)
-               .WithOne(c => c.Lawyer)
-               .HasForeignKey<Lawyer>(l => l.CaseId)
-               .OnDelete(DeleteBehavior.Cascade);
-
+            builder.HasMany<Case>(c => c.Cases)
+                .WithOne(l => l.Lawyer)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Inva.LawCases.Models;
+using Inva.LawCases.Repositories;
 using Microsoft.Extensions.DependencyInjection;
 using Volo.Abp.EntityFrameworkCore;
 using Volo.Abp.Modularity;

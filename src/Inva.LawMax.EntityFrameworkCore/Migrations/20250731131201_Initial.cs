@@ -452,13 +452,15 @@ namespace Inva.LawMax.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Cases",
+                name: "Lawyers",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Status = table.Column<int>(type: "int", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Phone = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Address = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Speciality = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     TenantId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
                     ConcurrencyStamp = table.Column<string>(type: "nvarchar(40)", maxLength: 40, nullable: false),
@@ -470,7 +472,7 @@ namespace Inva.LawMax.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Cases", x => x.Id);
+                    table.PrimaryKey("PK_Lawyers", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -792,43 +794,18 @@ namespace Inva.LawMax.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Hearings",
+                name: "Cases",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Date = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Location = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    TenantId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    CaseId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
-                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(40)", maxLength: 40, nullable: false),
-                    ExtraProperties = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CreationTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    CreatorId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    LastModificationTime = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    LastModifierId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Hearings", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Hearings_Cases_CaseId",
-                        column: x => x.CaseId,
-                        principalTable: "Cases",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Lawyers",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Phone = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Address = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Speciality = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CaseId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    Number = table.Column<int>(type: "int", nullable: false),
+                    CaseTitle = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    LitigationDegree = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    FinalVerdict = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Status = table.Column<int>(type: "int", nullable: false),
+                    Year = table.Column<int>(type: "int", nullable: false),
+                    LawyerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     TenantId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
                     ConcurrencyStamp = table.Column<string>(type: "nvarchar(40)", maxLength: 40, nullable: false),
@@ -840,12 +817,14 @@ namespace Inva.LawMax.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Lawyers", x => x.Id);
+                    table.PrimaryKey("PK_Cases", x => x.Id);
+                    table.UniqueConstraint("AK_Cases_Number", x => x.Number);
                     table.ForeignKey(
-                        name: "FK_Lawyers_Cases_CaseId",
-                        column: x => x.CaseId,
-                        principalTable: "Cases",
-                        principalColumn: "Id");
+                        name: "FK_Cases_Lawyers_LawyerId",
+                        column: x => x.LawyerId,
+                        principalTable: "Lawyers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -894,6 +873,34 @@ namespace Inva.LawMax.Migrations
                         principalTable: "AbpEntityChanges",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Hearings",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Date = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Location = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Decision = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CaseId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    TenantId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
+                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(40)", maxLength: 40, nullable: false),
+                    ExtraProperties = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CreationTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatorId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    LastModificationTime = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    LastModifierId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Hearings", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Hearings_Cases_CaseId",
+                        column: x => x.CaseId,
+                        principalTable: "Cases",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -1164,18 +1171,26 @@ namespace Inva.LawMax.Migrations
                 column: "UserName");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Hearings_CaseId",
-                table: "Hearings",
-                column: "CaseId",
-                unique: true,
-                filter: "[CaseId] IS NOT NULL");
+                name: "IX_Cases_LawyerId",
+                table: "Cases",
+                column: "LawyerId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Lawyers_CaseId",
+                name: "IX_Hearings_CaseId",
+                table: "Hearings",
+                column: "CaseId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Lawyers_Email",
                 table: "Lawyers",
-                column: "CaseId",
-                unique: true,
-                filter: "[CaseId] IS NOT NULL");
+                column: "Email",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Lawyers_Phone",
+                table: "Lawyers",
+                column: "Phone",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_OpenIddictApplications_ClientId",
@@ -1293,9 +1308,6 @@ namespace Inva.LawMax.Migrations
                 name: "Hearings");
 
             migrationBuilder.DropTable(
-                name: "Lawyers");
-
-            migrationBuilder.DropTable(
                 name: "OpenIddictScopes");
 
             migrationBuilder.DropTable(
@@ -1327,6 +1339,9 @@ namespace Inva.LawMax.Migrations
 
             migrationBuilder.DropTable(
                 name: "AbpAuditLogs");
+
+            migrationBuilder.DropTable(
+                name: "Lawyers");
 
             migrationBuilder.DropTable(
                 name: "OpenIddictApplications");

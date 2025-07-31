@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Inva.LawCases.DTOs.Case;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,7 +16,7 @@ namespace Inva.LawMax.DTOs.Lawyer
         public string? Phone { get; set; }
         public string? Address { get; set; }
         public string? Speciality { get; set; }
-        public Guid? CaseId { get; set; }
+        public ICollection<CaseDto>? Cases { get; set; } = new List<CaseDto>();
         public string? ConcurrencyStamp { get; set; }
     }
 }

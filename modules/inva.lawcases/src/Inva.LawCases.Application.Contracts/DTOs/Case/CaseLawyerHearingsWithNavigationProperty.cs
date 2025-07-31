@@ -12,6 +12,6 @@ namespace Inva.LawCases.DTOs.Case
     {
         public CaseDto CaseDto { get; set; }
         public LawyerDto LawyerDto { get; set; }
-        public HearingDto HearingDto { get; set; }
+        public ICollection<HearingDto> HearingDtos { get; set; } = new List<HearingDto>();
     }
 }

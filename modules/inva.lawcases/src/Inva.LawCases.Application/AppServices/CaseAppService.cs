@@ -1,10 +1,9 @@
 ﻿using Inva.LawCases.Base;
-using Inva.LawCases.CaseRepo;
 using Inva.LawCases.DTOs.Case;
 using Inva.LawCases.DTOs.Hearing;
 using Inva.LawCases.DTOs.Lawyer;
-using Inva.LawCases.HearingRepo;
 using Inva.LawCases.Interfaces;
+using Inva.LawCases.IRepositories;
 using Inva.LawCases.Models;
 using Inva.LawMax.DTOs.Lawyer;
 using Microsoft.EntityFrameworkCore;
@@ -31,7 +30,6 @@ namespace Inva.LawCases.AppServices
             _caseRepo = caseRepo;
             _hearingRepo = hearingRepo;
         }
-
         public async Task<PagedResultDto<CaseDto>> GetListAsync(PagedAndSortedResultRequestDto input)
         {
             var query = await _caseRepo.GetQueryableAsync();
@@ -52,8 +50,6 @@ namespace Inva.LawCases.AppServices
 
             return new PagedResultDto<CaseDto>(totalCount, caseDtos);
         }
-
-
         public async Task<CaseDto> GetCaseByIdAsync(Guid caseGuid)
         {
             var caseEntity = await _caseRepo.GetQueryableAsync();
@@ -71,10 +67,6 @@ namespace Inva.LawCases.AppServices
 
             return dto;
         }
-
-
-
-
         public async Task<CaseDto> CreateCaseAsync(CreateUpdateCaseDto caseDto)
         {
             var caseEntity = ObjectMapper.Map<CreateUpdateCaseDto, Case>(caseDto);
@@ -83,7 +75,6 @@ namespace Inva.LawCases.AppServices
 
             return ObjectMapper.Map<Case, CaseDto>(insertedCase);
         }
-
         public async Task<CaseDto> UpdateCaseAsync(Guid id, CreateUpdateCaseDto caseDto)
         {
             var cases = await _caseRepo.GetAsync(id);
@@ -98,14 +89,28 @@ namespace Inva.LawCases.AppServices
                 throw new AbpDbConcurrencyException("The record has been modified by someone else.");
             }
 
-            if (caseDto.Title != null)
-                cases.Title = caseDto.Title;
+            if (caseDto.CaseTitle != null)
+                cases.CaseTitle = caseDto.CaseTitle;
 
             if (caseDto.Description != null)
                 cases.Description = caseDto.Description;
 
+            if (caseDto.FinalVerdict != null)
+                cases.FinalVerdict = caseDto.FinalVerdict;
+
+            if (caseDto.Year != null)
+                cases.Year = caseDto.Year;
+
+            if (caseDto.LitigationDegree != null)
+                cases.LitigationDegree = caseDto.LitigationDegree;
+
             if (caseDto.Status != null)
                 cases.Status = (Enums.Status)caseDto.Status;
+
+            if (caseDto.HearingDtos != null)
+                cases.Hearings = caseDto.HearingDtos
+                    .Select(dtos => ObjectMapper.Map<HearingDto, Hearing>(dtos))
+                    .ToList();
 
 
             await _caseRepo.UpdateAsync(cases, autoSave: true);
@@ -132,20 +137,20 @@ namespace Inva.LawCases.AppServices
 
             var query = await _caseRepo.GetQueryableAsync();
             query = query.Include(c => c.Lawyer);
-            query = query.Include(c => c.Hearing);
-            
+            query = query.Include(c => c.Hearings);
+
             //if (date != null)
             //{
             //    query.Where(x => x.Hearing.Date == date);
 
             //}
 
-            query = query.OrderBy(input.Sorting ?? "Title");
+            query = query.OrderBy(input.Sorting ?? "CaseTitle");
 
             // إجمالي العناصر قبل التصفية
             var totalCount = await AsyncExecuter.CountAsync(query);
 
-        
+
             var items = await query.Skip(input.SkipCount)
                        .Take(input.MaxResultCount)
                        .ToListAsync();
@@ -155,39 +160,14 @@ namespace Inva.LawCases.AppServices
             {
                 CaseDto = ObjectMapper.Map<Case, CaseDto>(cases),
                 LawyerDto = cases.Lawyer != null ? ObjectMapper.Map<Lawyer, LawyerDto>(cases.Lawyer) : null,
-                HearingDto = cases.Hearing !=null ? ObjectMapper.Map<Hearing, HearingDto>(cases.Hearing) : null,
+                HearingDtos = cases.Hearings != null
+                ? ObjectMapper.Map<List<Hearing>, List<HearingDto>>(cases.Hearings.ToList())
+                : new List<HearingDto>(),
 
             }).ToList();
 
             return new PagedResultDto<CaseLawyerHearingsWithNavigationProperty>(totalCount, result);
         }
-
-        //public async Task<PagedResultDto<CaseHearingWithNavigationProperty>> GetCaseWithHearingListAsync(PagedAndSortedResultRequestDto input)
-        //{
-
-        //    var query = await _caseRepo.GetQueryableAsync();
-        //    query = query.Include(c => c.Hearing);
-
-        //    query = query.OrderBy(input.Sorting ?? "Title");
-
-        //    // إجمالي العناصر قبل التصفية
-        //    var totalCount = await AsyncExecuter.CountAsync(query);
-
-
-        //    var items = await query.Skip(input.SkipCount)
-        //               .Take(input.MaxResultCount)
-        //               .ToListAsync();
-
-
-        //    var result = items.Select(cases => new CaseHearingWithNavigationProperty
-        //    {
-        //        CaseDto = ObjectMapper.Map<Case, CaseDto>(cases),
-        //        HearingDto = cases.Hearing != null ? ObjectMapper.Map<Hearing, HearingDto>(cases.Hearing) : null
-        //    }).ToList();
-
-        //    return new PagedResultDto<CaseHearingWithNavigationProperty>(totalCount, result);
-        //}
-
         public async Task<CaseLawyerHearingsWithNavigationProperty> GetCaseWithLawyersAndHearingsByIdAsync(Guid caseGuid)
         {
             var cases = await _caseRepo.GetCaseWithLawyer(caseGuid);
@@ -199,28 +179,10 @@ namespace Inva.LawCases.AppServices
             }
             return new CaseLawyerHearingsWithNavigationProperty
             {
-                CaseDto = ObjectMapper.Map<Case,CaseDto>(cases),
+                CaseDto = ObjectMapper.Map<Case, CaseDto>(cases),
                 LawyerDto = ObjectMapper.Map<Lawyer, LawyerDto>(cases.Lawyer),
-                HearingDto = ObjectMapper.Map<Hearing, HearingDto>(hearing)
+                HearingDtos = ObjectMapper.Map<List<Hearing>, List<HearingDto>>(cases.Hearings.ToList())
             };
         }
-
-        //public async Task<CaseHearingWithNavigationProperty> GetCaseHearingByIdAsync(Guid caseGuid)
-        //{
-        //    var cases = await _caseRepo.GetCaseWithLawyer(caseGuid);
-
-
-        //    if (cases == null)
-        //    {
-        //        throw new EntityNotFoundException("Hearing Not Found");
-        //    }
-        //    return new CaseHearingWithNavigationProperty
-        //    {
-        //        CaseDto = ObjectMapper.Map<Case, CaseDto>(cases),
-        //        HearingDto = ObjectMapper.Map<Hearing, HearingDto>(cases.Hearing)
-        //    };
-        //}
-
-       
     }
 }

@@ -1,8 +1,6 @@
-using Inva.LawCases;
-using Inva.LawCases.CaseRepo;
 using Inva.LawCases.EntityFrameworkCore;
-using Inva.LawCases.HearingRepo;
-using Inva.LawCases.LawyerRepo.IlawyerReepository;
+using Inva.LawCases.IRepositories;
+using Inva.LawCases.Repositories;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using Volo.Abp.AuditLogging.EntityFrameworkCore;

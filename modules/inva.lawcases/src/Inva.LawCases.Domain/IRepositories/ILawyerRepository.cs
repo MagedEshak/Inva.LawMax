@@ -6,11 +6,10 @@ using System.Text;
 using System.Threading.Tasks;
 using Volo.Abp.Domain.Repositories;
 
-namespace Inva.LawCases.CaseRepo
+namespace Inva.LawCases.IRepositories
 {
-    public interface ICaseRepository:IRepository<Case,Guid>
+    public interface ILawyerRepository : IRepository<Lawyer, Guid>
     {
-        Task<Case> GetCaseWithLawyer(Guid id);
-        Task<Case> GetCaseWithHearing(Guid id);
+        Task<Lawyer> GetLawyerWithCase(Guid id);
     }
 }

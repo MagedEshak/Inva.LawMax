@@ -25,18 +25,6 @@ namespace Inva.LawCases.Controller
         {
             _caseAppService = caseAppService;
         }
-
-
-        //public async Task<PagedResultDto<CaseDto>> GetListAsync([FromQuery] PagedAndSortedResultRequestDto input)
-        //{
-        //    return await _caseAppService.GetListAsync(input);
-        //}
-
-
-        //public async Task<CaseDto> GetCaseByIdAsync(Guid caseGuid)
-        //{
-        //    return await _caseAppService.GetCaseByIdAsync(caseGuid);
-        //}
         [HttpGet("GetCaseWithLawyers")]
         public async Task<PagedResultDto<CaseLawyerHearingsWithNavigationProperty>> GetCaseWithLawyersAndHearingsListAsync([FromQuery] PagedAndSortedResultRequestDto input)
         {
