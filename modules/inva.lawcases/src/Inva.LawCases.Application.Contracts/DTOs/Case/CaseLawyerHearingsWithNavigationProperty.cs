@@ -11,7 +11,7 @@ namespace Inva.LawCases.DTOs.Case
     public class CaseLawyerHearingsWithNavigationProperty
     {
         public CaseDto CaseDto { get; set; }
-        public LawyerDto LawyerDto { get; set; }
-        public ICollection<HearingDto> HearingDtos { get; set; } = new List<HearingDto>();
+        public LawyerDto? LawyerDto { get; set; }
+        public ICollection<HearingDto>? HearingDtos { get; set; } = new List<HearingDto>();
     }
 }

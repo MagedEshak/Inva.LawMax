@@ -28,9 +28,9 @@ namespace Inva.LawCases.Controller
         }
 
         [HttpGet("{id}")]
-        public async Task<LawyerWithNavigationPropertyDto> GetAsync(Guid id)
+        public async Task<LawyerWithNavigationPropertyDto> GetAsync(Guid id, [FromQuery] DateTime? date)
         {
-            return await _lawyerAppService.GetLawyerByIdAsync(id);
+            return await _lawyerAppService.GetLawyerByIdAsync(id, date);
         }
 
 
@@ -40,6 +40,17 @@ namespace Inva.LawCases.Controller
             return await _lawyerAppService.GetListAsync(input);
         }
 
+        [HttpGet("check-email")]
+        public async Task<bool> CheckEmailAsync(string email)
+        {
+            return await _lawyerAppService.CheckEmailAsync(email);
+        }
+
+        [HttpGet("check-phone")]
+        public async Task<bool> CheckPhoneAsync(string phone)
+        {
+            return await _lawyerAppService.CheckPhoneAsync(phone);
+        }
 
         [HttpPost]
         public async Task<LawyerDto> CreateAsync([FromBody] CreateUpdateLawyerDto input)

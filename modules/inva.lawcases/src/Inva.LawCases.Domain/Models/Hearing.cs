@@ -40,7 +40,7 @@ namespace Inva.LawCases.Models
 
         public Hearing()
         {
-            
+            ConcurrencyStamp = Guid.NewGuid().ToString();
         }
     }
 }

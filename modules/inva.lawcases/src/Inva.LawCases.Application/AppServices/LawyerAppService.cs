@@ -31,12 +31,20 @@ namespace Inva.LawCases.AppServices
         {
             _lawyerRepo = lawyerRepo;
         }
+        public async Task<bool> CheckEmailAsync(string email)
+        {
+            return await _lawyerRepo.CheckEmailAsync(email);
+        }
 
+        public async Task<bool> CheckPhoneAsync(string phone)
+        {
+            return await _lawyerRepo.CheckPhoneAsync(phone);
+        }
         public async Task<LawyerDto> CreateLawyerAsync(CreateUpdateLawyerDto lawyerDto)
         {
             try
             {
-                var lawyerEntity = ObjectMapper.Map<CreateUpdateLawyerDto, Models.Lawyer>(lawyerDto);
+                var lawyerEntity = ObjectMapper.Map<CreateUpdateLawyerDto, Lawyer>(lawyerDto);
 
                 var insertedLawyer = await _lawyerRepo.InsertAsync(lawyerEntity, autoSave: true);
 
@@ -66,7 +74,7 @@ namespace Inva.LawCases.AppServices
         public async Task<PagedResultDto<LawyerWithNavigationPropertyDto>> GetListAsync(PagedAndSortedResultRequestDto input)
         {
             var query = await _lawyerRepo.GetQueryableAsync();
-            query = query.Include(c => c.Cases).ThenInclude(h=>h.Hearings);
+            query = query.Include(c => c.Cases).ThenInclude(h => h.Hearings);
 
             query = query.OrderBy(input.Sorting ?? "Name");
 
@@ -74,7 +82,7 @@ namespace Inva.LawCases.AppServices
             var totalCount = await AsyncExecuter.CountAsync(query);
 
             // Apply Pagination
-           
+
             var items = await query.Skip(input.SkipCount)
                        .Take(input.MaxResultCount)
                        .ToListAsync();
@@ -83,29 +91,39 @@ namespace Inva.LawCases.AppServices
             var result = items.Select(lawyer => new LawyerWithNavigationPropertyDto
             {
                 Lawyer = ObjectMapper.Map<Lawyer, LawyerDto>(lawyer),
-                Cases = lawyer.Cases != null ? 
-                ObjectMapper.Map<List<Case>, List<CaseDto>>(lawyer.Cases.ToList()) 
-                : new List<CaseDto>()}).ToList();
+                Cases = lawyer.Cases != null ?
+                ObjectMapper.Map<List<Case>, List<CaseDto>>(lawyer.Cases.ToList())
+                : new List<CaseDto>()
+            }).ToList();
 
             return new PagedResultDto<LawyerWithNavigationPropertyDto>(totalCount, result);
         }
 
 
-        public async Task<LawyerWithNavigationPropertyDto> GetLawyerByIdAsync(Guid ID)
+        public async Task<LawyerWithNavigationPropertyDto> GetLawyerByIdAsync(Guid ID, DateTime? date)
         {
             var lawyer = await _lawyerRepo.GetLawyerWithCase(ID);
-
 
             if (lawyer == null)
             {
                 throw new EntityNotFoundException("Lawyer Not Found");
             }
+
+            var filteredCases = lawyer.Cases?.ToList() ?? new List<Case>();
+
+            if (date.HasValue)
+            {
+                // فلترة القضايا حسب وجود جلسة لها بنفس التاريخ المحدد
+                filteredCases = filteredCases
+                    .Where(c => c.Hearings != null &&
+                                c.Hearings.Any(h => h.Date.Date == date.Value.Date))
+                    .ToList();
+            }
+
             return new LawyerWithNavigationPropertyDto
             {
                 Lawyer = ObjectMapper.Map<Lawyer, LawyerDto>(lawyer),
-                Cases = lawyer.Cases != null ?
-                ObjectMapper.Map<List<Case>, List<CaseDto>>(lawyer.Cases.ToList())
-                : new List<CaseDto>().ToList()
+                Cases = ObjectMapper.Map<List<Case>, List<CaseDto>>(filteredCases)
             };
         }
 

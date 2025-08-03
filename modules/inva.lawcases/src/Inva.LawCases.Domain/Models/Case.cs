@@ -14,7 +14,7 @@ namespace Inva.LawCases.Models
     public class Case : AuditedAggregateRoot<Guid>, IMultiTenant, ISoftDelete, IHasConcurrencyStamp
     {
 
-        public int Number { get; set; }
+        public string Number { get; set; }
         public string CaseTitle { get; set; }
         public string Description { get; set; }
         public string LitigationDegree { get; set; }
@@ -29,7 +29,7 @@ namespace Inva.LawCases.Models
         public ICollection<Hearing> Hearings { get; set; } = new List<Hearing>();
 
         //Constructor
-        public Case(int number,
+        public Case(string number,
             string caseTitle,
             string description,
             string litigationDegree,

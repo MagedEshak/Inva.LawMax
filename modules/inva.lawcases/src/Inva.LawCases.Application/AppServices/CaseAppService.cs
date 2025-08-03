@@ -30,26 +30,34 @@ namespace Inva.LawCases.AppServices
             _caseRepo = caseRepo;
             _hearingRepo = hearingRepo;
         }
-        public async Task<PagedResultDto<CaseDto>> GetListAsync(PagedAndSortedResultRequestDto input)
+        public async Task<PagedResultDto<CaseDto>> GetListAsync(PagedAndSortedResultRequestDto input, DateTime? date)
         {
             var query = await _caseRepo.GetQueryableAsync();
 
-            // تطبيق الترتيب (لو فيه)
-            query = query.OrderBy(input.Sorting ?? "Title");
+            query = query
+                        .Include(x => x.Lawyer)
+                        .Include(x => x.Hearings);
+            if (date != null)
+            {
+                var targetDate = date.Value.Date;
+                query = query.Where(d => d.CreationTime.Date == targetDate);
+            }
 
-            // إجمالي العناصر قبل التصفية
+            query = query.OrderBy(input.Sorting ?? "CaseTitle");
+
+           
             var totalCount = await AsyncExecuter.CountAsync(query);
 
-            // Apply Pagination
             var items = await AsyncExecuter.ToListAsync(
                 query.Skip(input.SkipCount).Take(input.MaxResultCount)
             );
 
-            // تحويل للـ DTO
             var caseDtos = ObjectMapper.Map<List<Case>, List<CaseDto>>(items);
 
             return new PagedResultDto<CaseDto>(totalCount, caseDtos);
         }
+
+
         public async Task<CaseDto> GetCaseByIdAsync(Guid caseGuid)
         {
             var caseEntity = await _caseRepo.GetQueryableAsync();
@@ -89,6 +97,7 @@ namespace Inva.LawCases.AppServices
                 throw new AbpDbConcurrencyException("The record has been modified by someone else.");
             }
 
+        
             if (caseDto.CaseTitle != null)
                 cases.CaseTitle = caseDto.CaseTitle;
 
@@ -111,6 +120,9 @@ namespace Inva.LawCases.AppServices
                 cases.Hearings = caseDto.HearingDtos
                     .Select(dtos => ObjectMapper.Map<HearingDto, Hearing>(dtos))
                     .ToList();
+
+            if (caseDto.LawyerId != null)
+                cases.LawyerId = caseDto.LawyerId;
 
 
             await _caseRepo.UpdateAsync(cases, autoSave: true);

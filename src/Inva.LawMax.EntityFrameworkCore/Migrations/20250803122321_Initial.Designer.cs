@@ -13,7 +13,7 @@ using Volo.Abp.EntityFrameworkCore;
 namespace Inva.LawMax.Migrations
 {
     [DbContext(typeof(LawMaxDbContext))]
-    [Migration("20250731131201_Initial")]
+    [Migration("20250803122321_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -85,8 +85,9 @@ namespace Inva.LawMax.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Number")
-                        .HasColumnType("int");
+                    b.Property<string>("Number")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("Status")
                         .HasColumnType("int");

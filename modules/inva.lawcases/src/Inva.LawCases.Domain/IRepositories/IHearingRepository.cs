@@ -1,4 +1,5 @@
-﻿using Inva.LawCases.Models;
+﻿using Inva.LawCases.DTOs.Hearing;
+using Inva.LawCases.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,5 +13,6 @@ namespace Inva.LawCases.IRepositories
     {
         Task<Hearing> GetHearingWithCase(Guid id);
         Task<Hearing> GetHearingWithCaseID(Guid id);
+        Task<List<HearingDto>> GetHearingsByLawyer(Guid lawyerId);
     }
 }

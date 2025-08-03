@@ -8,7 +8,7 @@ namespace Inva.LawCases.DTOs.Case
 {
     public class CreateUpdateCaseDto
     {
-        public int Number { get; set; }
+        public string Number { get; set; }
         public string CaseTitle { get; set; }
         public string Description { get; set; }
         public string LitigationDegree { get; set; }

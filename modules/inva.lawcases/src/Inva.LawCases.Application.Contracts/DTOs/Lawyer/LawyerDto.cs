@@ -17,7 +17,7 @@ namespace Inva.LawMax.DTOs.Lawyer
         public string Phone { get; set; }
         public string Address { get; set; }
         public string Speciality { get; set; }
-        public ICollection<CaseDto> Cases { get; set; } = new List<CaseDto>();
+        public ICollection<CaseDto>? Cases { get; set; } = new List<CaseDto>();
         public string ConcurrencyStamp { get; set; }
     }
 }

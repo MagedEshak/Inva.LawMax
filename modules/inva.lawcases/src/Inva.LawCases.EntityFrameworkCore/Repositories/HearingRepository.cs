@@ -1,4 +1,5 @@
-﻿using Inva.LawCases.EntityFrameworkCore;
+﻿using Inva.LawCases.DTOs.Hearing;
+using Inva.LawCases.EntityFrameworkCore;
 using Inva.LawCases.IRepositories;
 using Inva.LawCases.Models;
 using Microsoft.EntityFrameworkCore;
@@ -18,15 +19,41 @@ namespace Inva.LawCases.Repositories
         {
         }
 
+        public async Task<List<HearingDto>> GetHearingsByLawyer(Guid lawyerId)
+        {
+            var db = await GetDbContextAsync();
+
+            return await db.Hearings
+                .Include(h => h.Case)
+                .Where(h => h.Case.LawyerId == lawyerId)
+                .Select(h => new HearingDto
+                {
+                    Id = h.Id,
+                    Date = h.Date,
+                    Location = h.Location,
+                    Decision = h.Decision,
+                    CaseTitle = h.Case.CaseTitle,
+                    CaseStatus = h.Case.Status,
+                    CaseDescription = h.Case.Description,
+                    CaseFinalVerdict = h.Case.FinalVerdict,
+                    CaseLitigationDegree = h.Case.LitigationDegree,
+                    ConcurrencyStamp = h.Case.ConcurrencyStamp
+                })
+                .ToListAsync();
+        }
+
+
         public async Task<Hearing> GetHearingWithCase(Guid id)
         {
             var db = await GetDbContextAsync();
-            return db.Hearings.Include(c => c.Case).FirstOrDefault(h => h.Id == id);
+            return await db.Hearings.Include(c => c.Case).ThenInclude(l => l.Lawyer).FirstOrDefaultAsync(h => h.Id == id);
         }
         public async Task<Hearing> GetHearingWithCaseID(Guid id)
         {
             var db = await GetDbContextAsync();
-            return db.Hearings.Include(c => c.Case).FirstOrDefault(h => h.CaseId == id);
+            return await db.Hearings.Include(c => c.Case).ThenInclude(l => l.Lawyer).FirstOrDefaultAsync(h => h.CaseId == id);
         }
+
+
     }
 }

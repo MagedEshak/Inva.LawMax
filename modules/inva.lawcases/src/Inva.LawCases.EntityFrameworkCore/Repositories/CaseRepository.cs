@@ -21,15 +21,21 @@ namespace Inva.LawCases.Repositories
         public async Task<Case> GetCaseWithHearing(Guid id)
         {
             var db = await GetDbContextAsync();
-            return db.Cases.Include(c => c.Hearings).FirstOrDefault(h => h.Id == id);
+            return await db.Cases
+                .Include(c => c.Hearings)
+                .FirstOrDefaultAsync(c => c.Id == id);
         }
 
         public async Task<Case> GetCaseWithLawyer(Guid id)
         {
             var db = await GetDbContextAsync();
-            var cases = db.Cases.Include(c => c.Lawyer).FirstOrDefault(h => h.Id == id);
-            cases = db.Cases.Include(c => c.Hearings).FirstOrDefault(h => h.Id == id);
-            return cases;
+
+            return await db.Cases
+                .Include(c => c.Lawyer)
+                .Include(c => c.Hearings)
+                .FirstOrDefaultAsync(c => c.Id == id);
         }
+
+
     }
 }

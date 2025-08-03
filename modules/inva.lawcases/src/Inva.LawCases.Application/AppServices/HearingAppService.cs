@@ -17,6 +17,7 @@ using Volo.Abp.Application.Dtos;
 using Volo.Abp.Data;
 using Volo.Abp.Domain.Entities;
 using Volo.Abp.Domain.Repositories;
+using Volo.Abp.ObjectMapping;
 
 namespace Inva.LawCases.AppServices
 {
@@ -60,7 +61,6 @@ namespace Inva.LawCases.AppServices
 
             if (hearing == null)
             {
-
                 throw new EntityNotFoundException("Hearing Not Found");
             }
 
@@ -70,6 +70,18 @@ namespace Inva.LawCases.AppServices
                 Case = ObjectMapper.Map<Case, CaseDto>(hearing.Case)
             };
         }
+        public async Task<List<HearingDto>> GetHearingsByLawyerAsync(Guid lawyerId)
+        {
+            var hearing = await _hearingRepo.GetHearingsByLawyer(lawyerId);
+
+            if (hearing == null)
+            {
+                throw new EntityNotFoundException("Hearing Not Found");
+            }
+            return hearing;
+        }
+
+       
 
         public async Task<HearingDto> CreateHearingAsync(CreateUpdateHearingDto hearing)
         {
@@ -100,8 +112,9 @@ namespace Inva.LawCases.AppServices
             if (hearingDto.Location != null)
                 hearing.Location = hearingDto.Location;
 
-            if (hearingDto.CaseId != null)
-                hearing.CaseId = hearingDto.CaseId;
+            if (hearingDto.Decision != null)
+                hearing.Decision = hearingDto.Decision;
+
 
             await _hearingRepo.UpdateAsync(hearing, autoSave: true);
 
@@ -120,5 +133,7 @@ namespace Inva.LawCases.AppServices
             await _hearingRepo.DeleteAsync(hearing, autoSave: true);
             return true;
         }
+
+
     }
 }

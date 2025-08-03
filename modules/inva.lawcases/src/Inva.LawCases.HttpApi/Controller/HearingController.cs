@@ -3,6 +3,7 @@ using Inva.LawCases.Interfaces;
 using Inva.LawMax.DTOs.Lawyer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,7 +36,12 @@ namespace Inva.LawCases.Controller
         {
             return await _hearingAppService.GetHearingByIdAsync(hearingGuid);
         }
-
+        [HttpGet("hearingsByLawyerId/{lawyerId}")]
+        public async Task<List<HearingDto>> GetHearingsByLawyerAsync(Guid lawyerId)
+        {
+            return await _hearingAppService.GetHearingsByLawyerAsync(lawyerId);
+        }
+     
         [HttpPost]
         public async Task<HearingDto> CreateHearingAsync([FromBody] CreateUpdateHearingDto hearingDto)
         {
@@ -53,6 +59,5 @@ namespace Inva.LawCases.Controller
         {
             return await _hearingAppService.DeleteHearingAsync(hearingGuid);
         }
-
     }
 }

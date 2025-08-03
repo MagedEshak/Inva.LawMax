@@ -11,5 +11,7 @@ namespace Inva.LawCases.IRepositories
     public interface ILawyerRepository : IRepository<Lawyer, Guid>
     {
         Task<Lawyer> GetLawyerWithCase(Guid id);
+        Task<bool> CheckEmailAsync(string email);
+        Task<bool> CheckPhoneAsync(string phone);
     }
 }

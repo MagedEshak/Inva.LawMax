@@ -11,6 +11,6 @@ namespace Inva.LawCases.DTOs.Hearing
     public class HearingWithNavigationPropertyDto
     {
         public HearingDto Hearing { get; set; }
-        public CaseDto Case { get; set; }
+        public CaseDto? Case { get; set; }
     }
 }

@@ -798,7 +798,7 @@ namespace Inva.LawMax.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Number = table.Column<int>(type: "int", nullable: false),
+                    Number = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     CaseTitle = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     LitigationDegree = table.Column<string>(type: "nvarchar(max)", nullable: false),

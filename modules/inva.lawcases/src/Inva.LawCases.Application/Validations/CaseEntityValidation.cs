@@ -25,12 +25,13 @@ namespace Inva.LawCases.Validations
             .MaximumLength(1000).WithMessage("Final Verdict must be at most 1000 characters.")
             .When(d => d.FinalVerdict != null);
 
-            RuleFor(x => x.Number).NotEmpty()
-            .WithMessage("Number must be at most 1000 characters.")
+            RuleFor(x => x.Number)
+           .NotEmpty().WithMessage("Number is required.")
+           .MaximumLength(50).WithMessage("Number must be at most 50 characters.")
             .When(d => d.Number != null);
 
-            RuleFor(x => x.Year).NotEmpty()
-            .WithMessage("Number must be at most 1000 characters.")
+            RuleFor(x => x.Year)
+            .NotEmpty().WithMessage("Number must be at most 1000 characters.")
             .When(d => d.Year != null);
 
             RuleFor(x => x.LitigationDegree)

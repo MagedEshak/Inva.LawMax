@@ -30,17 +30,28 @@ namespace Inva.LawCases.Controller
         {
             return await _caseAppService.GetCaseWithLawyersAndHearingsListAsync(input);
         }
-     
+
         [HttpGet("CaseWithLawyersAndHearings/{caseGuid}")]
         public async Task<CaseLawyerHearingsWithNavigationProperty> GetCaseWithLawyersAndHearingsByIdAsync(Guid caseGuid)
         {
             return await _caseAppService.GetCaseWithLawyersAndHearingsByIdAsync(caseGuid);
         }
-        
+        [HttpGet("Cases")]
+        public async Task<PagedResultDto<CaseDto>> GetListAsync(
+                           [FromQuery] PagedAndSortedResultRequestDto input,
+                           [FromQuery] DateTime? date)
+        {
+            return await _caseAppService.GetListAsync(input, date);
+        }
+        [HttpGet("CaseById/{caseGuid}")]
+        public async Task<CaseDto> GetCaseByIdAsync(Guid caseGuid)
+        {
+            return await _caseAppService.GetCaseByIdAsync(caseGuid);
+        }
         [HttpPost]
         public async Task<CaseDto> CreateCaseAsync([FromBody] CreateUpdateCaseDto caseDto)
         {
-           return await _caseAppService.CreateCaseAsync(caseDto);
+            return await _caseAppService.CreateCaseAsync(caseDto);
         }
 
         [HttpPatch("{id}")]
@@ -55,6 +66,6 @@ namespace Inva.LawCases.Controller
             return await _caseAppService.DeleteCaseAsync(caseGuid);
         }
 
-       
+
     }
 }

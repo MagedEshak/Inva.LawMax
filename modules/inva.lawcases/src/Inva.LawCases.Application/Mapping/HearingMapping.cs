@@ -13,7 +13,13 @@ namespace Inva.LawCases.Mapping
     {
         public HearingMapping()
         {
-            CreateMap<Hearing, HearingDto>();
+
+            CreateMap<Hearing, HearingDto>()
+                .ForMember(dest => dest.CaseTitle, opt => opt.MapFrom(src => src.Case.CaseTitle))
+                .ForMember(dest => dest.CaseDescription, opt => opt.MapFrom(src => src.Case.Description))
+                .ForMember(dest => dest.CaseLitigationDegree, opt => opt.MapFrom(src => src.Case.LitigationDegree))
+                .ForMember(dest => dest.CaseFinalVerdict, opt => opt.MapFrom(src => src.Case.FinalVerdict))
+                .ForMember(dest => dest.CaseStatus, opt => opt.MapFrom(src => src.Case.Status));
 
             CreateMap<CreateUpdateHearingDto, Hearing>()
                 .ForMember(dest => dest.Case, opt => opt.Ignore())

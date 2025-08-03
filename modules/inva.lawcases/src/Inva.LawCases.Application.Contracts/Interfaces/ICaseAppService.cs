@@ -16,6 +16,8 @@ namespace Inva.LawCases.Interfaces
         Task<CaseDto> UpdateCaseAsync(Guid id,CreateUpdateCaseDto caseDto);
         Task<PagedResultDto<CaseLawyerHearingsWithNavigationProperty>> GetCaseWithLawyersAndHearingsListAsync(PagedAndSortedResultRequestDto input);
         Task<CaseLawyerHearingsWithNavigationProperty> GetCaseWithLawyersAndHearingsByIdAsync(Guid caseGuid);
+        Task<PagedResultDto<CaseDto>> GetListAsync(PagedAndSortedResultRequestDto input,DateTime? date);
+        Task<CaseDto> GetCaseByIdAsync(Guid caseGuid);
         Task<bool> DeleteCaseAsync(Guid caseGuid);
     }
 }
