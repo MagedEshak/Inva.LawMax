@@ -23,23 +23,48 @@ using Volo.Abp.ObjectMapping;
 
 namespace Inva.LawCases.AppServices
 {
+    /// <summary>
+    /// Provides application-level services for managing lawyers, including operations such as creating, updating,
+    /// deleting, and retrieving lawyer information.
+    /// </summary>
+    /// <remarks>This service acts as a bridge between the domain layer and the application layer, exposing
+    /// methods for managing lawyer entities and their related data. It includes functionality for checking the
+    /// uniqueness of email and phone numbers, handling pagination, and managing relationships between lawyers and their
+    /// associated cases.</remarks>
     public class LawyerAppService : ApplicationService, ILawyerAppService
     {
         private readonly ILawyerRepository _lawyerRepo;
-
         public LawyerAppService(ILawyerRepository lawyerRepo)
         {
             _lawyerRepo = lawyerRepo;
         }
+        /// <summary>
+        /// Asynchronously checks whether the specified email exists in the system.
+        /// </summary>
+        /// <param name="email">The email address to check. Cannot be null or empty.</param>
+        /// <returns>A task that represents the asynchronous operation. The task result is  true if the email exists; otherwise,
+        /// false.</returns> 
         public async Task<bool> CheckEmailAsync(string email)
         {
             return await _lawyerRepo.CheckEmailAsync(email);
         }
-
+        /// <summary>
+        /// Checks whether the specified phone number exists in the system.
+        /// </summary>
+        /// <param name="phone">The phone number to check. Must be a non-null, non-empty string.</param>
+        /// <returns><see langword="true"/> if the phone number exists; otherwise, <see langword="false"/>.</returns> 
         public async Task<bool> CheckPhoneAsync(string phone)
         {
             return await _lawyerRepo.CheckPhoneAsync(phone);
         }
+        /// <summary>
+        /// Creates a new lawyer record asynchronously and returns the created lawyer's details.
+        /// </summary>
+        /// <remarks>This method maps the provided <paramref name="lawyerDto"/> to a lawyer entity,
+        /// inserts it into the repository, and returns the created lawyer's details as a <see cref="LawyerDto"/>. The
+        /// operation is performed asynchronously.</remarks>
+        /// <param name="lawyerDto">An object containing the details of the lawyer to be created. This parameter must not be null.</param>
+        /// <returns>A <see cref="LawyerDto"/> object representing the newly created lawyer.</returns> 
         public async Task<LawyerDto> CreateLawyerAsync(CreateUpdateLawyerDto lawyerDto)
         {
             try
@@ -56,7 +81,14 @@ namespace Inva.LawCases.AppServices
                 throw;
             }
         }
-
+         /// <summary>
+        /// Deletes a lawyer identified by the specified unique identifier.
+        /// </summary>
+        /// <remarks>This method performs an asynchronous operation to locate and delete the lawyer.  If
+        /// the lawyer does not exist, no action is taken, and the method returns <see langword="false"/>.</remarks>
+        /// <param name="lawyerGuid">The unique identifier of the lawyer to delete.</param>
+        /// <returns><see langword="true"/> if the lawyer was successfully deleted;  otherwise, <see langword="false"/> if no
+        /// lawyer with the specified identifier was found.</returns>
         public async Task<bool> DeleteLawyerAsync(Guid lawyerGuid)
         {
             var lawyer = await _lawyerRepo.FindAsync(lawyerGuid);
@@ -69,8 +101,17 @@ namespace Inva.LawCases.AppServices
             await _lawyerRepo.DeleteAsync(lawyer, autoSave: true);
             return true;
         }
-
-
+        /// <summary>
+        /// Retrieves a paginated and sorted list of lawyers, including their associated cases and hearings.
+        /// </summary>
+        /// <remarks>This method retrieves lawyers from the database along with their related cases and
+        /// hearings. The results are paginated and sorted based on the provided <paramref name="input"/> parameters. If
+        /// no sorting is specified, the default sorting is by the lawyer's name.</remarks>
+        /// <param name="input">The pagination and sorting parameters, including the number of items to skip, the maximum number of items to
+        /// return, and the sorting criteria. The <paramref name="input"/> parameter cannot be null.</param>
+        /// <returns>A <see cref="Task{TResult}"/> representing the asynchronous operation. The result contains a <see
+        /// cref="PagedResultDto{T}"/> of <see cref="LawyerWithNavigationPropertyDto"/>, where each item includes a
+        /// lawyer and their associated cases.</returns> 
         public async Task<PagedResultDto<LawyerWithNavigationPropertyDto>> GetListAsync(PagedAndSortedResultRequestDto input)
         {
             var query = await _lawyerRepo.GetQueryableAsync();
@@ -86,8 +127,6 @@ namespace Inva.LawCases.AppServices
             var items = await query.Skip(input.SkipCount)
                        .Take(input.MaxResultCount)
                        .ToListAsync();
-
-
             var result = items.Select(lawyer => new LawyerWithNavigationPropertyDto
             {
                 Lawyer = ObjectMapper.Map<Lawyer, LawyerDto>(lawyer),
@@ -95,7 +134,6 @@ namespace Inva.LawCases.AppServices
                 ObjectMapper.Map<List<Case>, List<CaseDto>>(lawyer.Cases.ToList())
                 : new List<CaseDto>()
             }).ToList();
-
             return new PagedResultDto<LawyerWithNavigationPropertyDto>(totalCount, result);
         }
 
@@ -108,7 +146,6 @@ namespace Inva.LawCases.AppServices
             {
                 throw new EntityNotFoundException("Lawyer Not Found");
             }
-
             var filteredCases = lawyer.Cases?.ToList() ?? new List<Case>();
 
             if (date.HasValue)
@@ -119,14 +156,13 @@ namespace Inva.LawCases.AppServices
                                 c.Hearings.Any(h => h.Date.Date == date.Value.Date))
                     .ToList();
             }
-
             return new LawyerWithNavigationPropertyDto
             {
                 Lawyer = ObjectMapper.Map<Lawyer, LawyerDto>(lawyer),
                 Cases = ObjectMapper.Map<List<Case>, List<CaseDto>>(filteredCases)
             };
         }
-
+       
         public async Task<LawyerDto> UpdateLawyerAsync(Guid id, CreateUpdateLawyerDto lawyerDto)
         {
             var lawyer = await _lawyerRepo.GetAsync(id);
