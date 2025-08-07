@@ -35,7 +35,7 @@ namespace Inva.LawCases.Controller
 
 
         [HttpGet("all")]
-        public async Task<PagedResultDto<LawyerWithNavigationPropertyDto>> GetListAsync([FromQuery] PagedAndSortedResultRequestDto input)
+        public async Task<PagedResultDto<LawyerWithNavigationPropertyDto>> GetListAsync([FromQuery] GetLawyerFilterDto input)
         {
             return await _lawyerAppService.GetListAsync(input);
         }

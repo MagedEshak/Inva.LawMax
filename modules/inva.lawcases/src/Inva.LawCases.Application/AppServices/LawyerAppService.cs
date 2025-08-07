@@ -81,7 +81,7 @@ namespace Inva.LawCases.AppServices
                 throw;
             }
         }
-         /// <summary>
+        /// <summary>
         /// Deletes a lawyer identified by the specified unique identifier.
         /// </summary>
         /// <remarks>This method performs an asynchronous operation to locate and delete the lawyer.  If
@@ -112,19 +112,37 @@ namespace Inva.LawCases.AppServices
         /// <returns>A <see cref="Task{TResult}"/> representing the asynchronous operation. The result contains a <see
         /// cref="PagedResultDto{T}"/> of <see cref="LawyerWithNavigationPropertyDto"/>, where each item includes a
         /// lawyer and their associated cases.</returns> 
-        public async Task<PagedResultDto<LawyerWithNavigationPropertyDto>> GetListAsync(PagedAndSortedResultRequestDto input)
+        public async Task<PagedResultDto<LawyerWithNavigationPropertyDto>> GetListAsync(GetLawyerFilterDto input)
         {
-            var query = await _lawyerRepo.GetQueryableAsync();
-            query = query.Include(c => c.Cases).ThenInclude(h => h.Hearings);
-
-            query = query.OrderBy(input.Sorting ?? "Name");
-
+            if (input.Sorting.IsNullOrWhiteSpace())
+            {
+                input.Sorting = nameof(Lawyer.Id);
+            }
+            var query = (await _lawyerRepo.GetQueryableAsync())
+                .Include(c => c.Cases)
+                .ThenInclude(h => h.Hearings)
+                .WhereIf(!input.Filter.IsNullOrWhiteSpace(),
+                     lawyer => lawyer.Name.Contains(input.Filter) ||
+                              lawyer.Email.Contains(input.Filter) ||
+                              lawyer.Phone.Contains(input.Filter) ||
+                              lawyer.Address.Contains(input.Filter) ||
+                              lawyer.Speciality.Contains(input.Filter)
+                           );
             // إجمالي العناصر قبل التصفية
-            var totalCount = await AsyncExecuter.CountAsync(query);
+            var totalCount = input.Filter == null
+                ? await _lawyerRepo.CountAsync() :
+                  await _lawyerRepo.CountAsync(
+                             lawyer => lawyer.Name.Contains(input.Filter) ||
+                                        lawyer.Email.Contains(input.Filter) ||
+                                        lawyer.Phone.Contains(input.Filter) ||
+                                        lawyer.Address.Contains(input.Filter) ||
+                                        lawyer.Speciality.Contains(input.Filter)
+                           );
 
             // Apply Pagination
-
-            var items = await query.Skip(input.SkipCount)
+            var items = await query
+                       .OrderBy(input.Sorting)
+                       .Skip(input.SkipCount)
                        .Take(input.MaxResultCount)
                        .ToListAsync();
             var result = items.Select(lawyer => new LawyerWithNavigationPropertyDto
@@ -136,8 +154,7 @@ namespace Inva.LawCases.AppServices
             }).ToList();
             return new PagedResultDto<LawyerWithNavigationPropertyDto>(totalCount, result);
         }
-
-
+ 
         public async Task<LawyerWithNavigationPropertyDto> GetLawyerByIdAsync(Guid ID, DateTime? date)
         {
             var lawyer = await _lawyerRepo.GetLawyerWithCase(ID);
@@ -162,7 +179,6 @@ namespace Inva.LawCases.AppServices
                 Cases = ObjectMapper.Map<List<Case>, List<CaseDto>>(filteredCases)
             };
         }
-       
         public async Task<LawyerDto> UpdateLawyerAsync(Guid id, CreateUpdateLawyerDto lawyerDto)
         {
             var lawyer = await _lawyerRepo.GetAsync(id);

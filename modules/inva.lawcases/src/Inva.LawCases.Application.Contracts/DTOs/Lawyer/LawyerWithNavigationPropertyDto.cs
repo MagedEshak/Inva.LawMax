@@ -12,6 +12,5 @@ namespace Inva.LawCases.DTOs.Lawyer
     {
         public LawyerDto Lawyer { get; set; }
         public ICollection<CaseDto>? Cases { get; set; } = new List<CaseDto>();
-        //public CaseDto Case { get; set; }
     }
 }

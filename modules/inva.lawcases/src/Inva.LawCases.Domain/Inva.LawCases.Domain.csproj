@@ -15,8 +15,4 @@
     <ProjectReference Include="..\Inva.LawCases.Domain.Shared\Inva.LawCases.Domain.Shared.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="SeedingData\" />
-  </ItemGroup>
-
 </Project>
